@@ -1,5 +1,6 @@
 package au.com.hellopeople.hotch;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -7,7 +8,7 @@ import android.view.View;
 
 import au.com.hellopeople.hotch.register_offer_services.*;
 
-public class SellActivity extends AppCompatActivity {
+public class SellActivity extends Activity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
