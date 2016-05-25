@@ -1,0 +1,203 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#272930"
+    tools:context="au.com.hellopeople.hotch.FriendsActivity">
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:id="@+id/linearLayout7"
+        android:weightSum="4">
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/explore_activities_button"
+            android:layout_weight="1"
+            android:textColor="@drawable/white_text_color"
+            android:textSize="8sp"
+            android:background="#a71620"
+            android:textAllCaps="false"
+            style="?android:borderlessButtonStyle"
+            android:onClick="exploreActivitiesActivity"
+            android:drawableTop="@drawable/explore_button"
+            android:padding="8dp" />
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:drawableTop="@drawable/our_events_button"
+            android:padding="8dp"
+            android:id="@+id/our_events_button"
+            android:layout_weight="1"
+            android:textSize="8sp"
+            android:textColor="@drawable/white_text_color"
+            android:textAllCaps="false"
+            style="?android:borderlessButtonStyle"
+            android:background="#8f1922" />
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:drawableTop="@drawable/trending_button"
+            android:padding="8dp"
+            android:id="@+id/trending_button"
+            android:layout_weight="1"
+            android:textSize="8sp"
+            android:textColor="@drawable/white_text_color"
+            android:textAllCaps="false"
+            style="?android:borderlessButtonStyle"
+            android:background="#7f171e" />
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:drawableTop="@drawable/recommendation_button"
+            android:padding="8dp"
+            android:id="@+id/recommendations_button"
+            android:layout_weight="1"
+            android:textSize="8sp"
+            android:textColor="@drawable/white_text_color"
+            android:textAllCaps="false"
+            style="?android:borderlessButtonStyle"
+            android:background="#7b1220" />
+    </LinearLayout>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="30dp"
+        android:inputType="textMultiLine"
+        android:ems="10"
+        android:textColor="#fff"
+        android:id="@+id/personMessageText"
+        android:text="@string/friends_and_newsfeed"
+        android:textColorHint="#fff"
+        android:textSize="14sp"
+        android:layout_alignParentTop="false"
+        android:layout_alignParentLeft="false"
+        android:layout_alignParentStart="false"
+        android:layout_marginRight="20dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="5dp"
+        android:gravity="center"
+        android:textStyle="bold"
+        android:layout_below="@+id/linearLayout7" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="30dp"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/personMessageText"
+        android:id="@+id/choose_cat_id"
+        android:layout_marginTop="10dp"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true">
+
+        <EditText
+            android:layout_width="120dp"
+            android:layout_height="30dp"
+            android:ems="10"
+            android:id="@+id/search_friends_text"
+            android:textColor="#fff"
+            android:textSize="11sp"
+            android:background="@drawable/dark_white_round_corners"
+            android:paddingLeft="10dp"
+            android:textColorHint="#fff"
+            android:inputType="textPersonName"
+            android:layout_marginLeft="20dp"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginRight="20dp"
+            android:layout_alignParentStart="true"
+            android:hint="@string/search_for_friends"
+            android:gravity="left|center_vertical"
+            android:layout_alignParentLeft="true" />
+    </RelativeLayout>
+
+    <ListView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/listView2"
+        android:layout_below="@+id/choose_cat_id"
+        android:layout_centerHorizontal="true"
+        android:layout_above="@+id/linearLayout8"
+        android:layout_marginTop="10dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:background="#15161a"
+        android:dividerHeight="1dp"
+        android:divider="#272930" />
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:id="@+id/linearLayout8"
+        android:weightSum="4"
+        android:layout_alignParentBottom="true">
+
+        <Button
+            style="?android:borderlessButtonStyle"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:drawableTop="@drawable/my_profile_button"
+            android:padding="8dp"
+            android:id="@+id/my_profile_button"
+            android:layout_weight="1"
+            android:textColor="@drawable/white_text_color"
+            android:textSize="8sp"
+            android:background="#a71621"
+            android:textAllCaps="false"
+            android:onClick="myProfileActivity" />
+
+        <Button
+            style="?android:borderlessButtonStyle"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:drawableTop="@drawable/upcoming_button"
+            android:padding="8dp"
+            android:id="@+id/upcoming_button"
+            android:layout_weight="1"
+            android:textSize="8sp"
+            android:textColor="@drawable/white_text_color"
+            android:textAllCaps="false"
+            android:background="#901a23"
+            android:onClick="upcomingActivitiesActivity" />
+
+        <Button
+            style="?android:borderlessButtonStyle"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:drawableTop="@drawable/share_button"
+            android:padding="8dp"
+            android:id="@+id/sell_or_share_button"
+            android:layout_weight="1"
+            android:textSize="8sp"
+            android:textColor="#000"
+            android:textAllCaps="false"
+            android:textStyle="bold"
+            android:background="#7f171f"
+            android:paddingLeft="13dp"
+            android:paddingRight="13dp"
+            android:onClick="sellOrShareActivity" />
+
+        <Button
+            style="?android:borderlessButtonStyle"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:drawableTop="@drawable/friends_icon_select"
+            android:padding="8dp"
+            android:id="@+id/friends_button"
+            android:layout_weight="1"
+            android:textSize="8sp"
+            android:textColor="@drawable/white_text_color"
+            android:textAllCaps="false"
+            android:background="#7b1221" />
+    </LinearLayout>
+
+</RelativeLayout>

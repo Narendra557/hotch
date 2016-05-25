@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="au.com.hellopeople.hotch.SettingsActivity">
+
+    <RelativeLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="#000"
+        android:id="@+id/relativeLayout7"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true">
+
+        <Button
+            style="?android:borderlessButtonStyle"
+            android:layout_width="40dp"
+            android:layout_height="wrap_content"
+            android:id="@+id/back_button"
+            android:layout_centerVertical="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_marginLeft="15dp"
+            android:layout_marginStart="15dp"
+            android:background="@drawable/bakc_button"
+            android:textColor="#fff"
+            android:textSize="13sp"
+            android:textAllCaps="false" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="@string/settings_1"
+            android:id="@+id/textView16"
+            android:layout_gravity="center_horizontal"
+            android:textSize="16sp"
+            android:layout_centerVertical="true"
+            android:layout_centerHorizontal="true"
+            android:textColor="#fff" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#fff"
+        android:layout_below="@+id/relativeLayout7"
+        android:layout_centerHorizontal="true">
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:text="@string/add_activity"
+            android:id="@+id/add_activity_button"
+            android:layout_marginTop="45dp"
+            android:background="@drawable/red_button"
+            android:textColor="#fff"
+            android:textAllCaps="false"
+            style="?android:borderlessButtonStyle"
+            android:textSize="16sp"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:drawableRight="@drawable/right_arrow_button"
+            android:gravity="left|center_vertical"
+            android:paddingLeft="25dp" />
+
+        <Button
+            style="?android:borderlessButtonStyle"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:text="@string/my_activities"
+            android:id="@+id/my_activities_button"
+            android:background="@drawable/red_button"
+            android:textColor="#fff"
+            android:textAllCaps="false"
+            android:textSize="16sp"
+            android:drawableRight="@drawable/right_arrow_button"
+            android:gravity="left|center_vertical"
+            android:paddingLeft="25dp"
+            android:layout_below="@+id/add_activity_button"
+            android:layout_centerHorizontal="true"
+            android:layout_marginLeft="20dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginRight="20dp" />
+
+        <Button
+            style="?android:borderlessButtonStyle"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:text="@string/my_profile"
+            android:id="@+id/my_profile_button"
+            android:background="@drawable/red_button"
+            android:textColor="#fff"
+            android:textAllCaps="false"
+            android:textSize="16sp"
+            android:drawableRight="@drawable/right_arrow_button"
+            android:gravity="left|center_vertical"
+            android:paddingLeft="25dp"
+            android:layout_below="@+id/my_activities_button"
+            android:layout_centerHorizontal="true"
+            android:layout_marginLeft="20dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginRight="20dp" />
+
+        <Button
+            style="?android:borderlessButtonStyle"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:text="@string/business_profile"
+            android:id="@+id/business_profile_button"
+            android:background="@drawable/red_button"
+            android:textColor="#fff"
+            android:textAllCaps="false"
+            android:textSize="16sp"
+            android:drawableRight="@drawable/right_arrow_button"
+            android:gravity="left|center_vertical"
+            android:paddingLeft="25dp"
+            android:layout_below="@+id/my_profile_button"
+            android:layout_centerHorizontal="true"
+            android:layout_marginRight="20dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginLeft="20dp" />
+
+        <Button
+            style="?android:borderlessButtonStyle"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:text="@string/my_bookings"
+            android:id="@+id/my_bookings_button"
+            android:background="@drawable/red_button"
+            android:textColor="#fff"
+            android:textAllCaps="false"
+            android:textSize="16sp"
+            android:drawableRight="@drawable/right_arrow_button"
+            android:gravity="left|center_vertical"
+            android:paddingLeft="25dp"
+            android:layout_below="@+id/business_profile_button"
+            android:layout_centerHorizontal="true"
+            android:layout_marginLeft="20dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginRight="20dp" />
+
+        <Button
+            style="?android:borderlessButtonStyle"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:text="@string/settings"
+            android:id="@+id/settings_button"
+            android:background="@drawable/red_button"
+            android:textColor="#fff"
+            android:textAllCaps="false"
+            android:textSize="16sp"
+            android:drawableRight="@drawable/right_arrow_button"
+            android:gravity="left|center_vertical"
+            android:paddingLeft="25dp"
+            android:layout_below="@+id/my_bookings_button"
+            android:layout_centerHorizontal="true"
+            android:layout_marginLeft="20dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginRight="20dp"
+            android:layout_marginBottom="20dp" />
+    </RelativeLayout>
+</RelativeLayout>

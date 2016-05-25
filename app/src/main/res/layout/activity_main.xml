@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="au.com.hellopeople.hotch.MainActivity"
+    android:background="#fff">
+
+    <RelativeLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:background="#000"
+        android:id="@+id/relativeLayout3" >
+
+        <Button
+            style="?android:borderlessButtonStyle"
+            android:layout_width="40dp"
+            android:layout_height="35dp"
+            android:id="@+id/settings_button"
+            android:layout_centerVertical="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_marginLeft="15dp"
+            android:layout_marginStart="15dp"
+            android:background="@drawable/top_bar_settings_icon"
+            android:textColor="#fff"
+            android:textSize="13sp"
+            android:textAllCaps="false" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="@string/main_menu"
+            android:id="@+id/textView11"
+            android:layout_gravity="center_horizontal"
+            android:textSize="16sp"
+            android:layout_centerVertical="true"
+            android:layout_centerHorizontal="true"
+            android:textColor="#fff" />
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/relativeLayout3"
+        android:background="#fff">
+
+
+
+
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:id="@+id/linearLayout5"
+            android:gravity="center_vertical|center_horizontal"
+            android:layout_marginTop="50dp">
+            <Button
+                android:layout_width="120dp"
+                android:layout_height="120dp"
+                android:text="@string/profile"
+                android:id="@+id/profile_button"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:background="@drawable/red_button"
+                android:textAllCaps="false"
+                style="?android:borderlessButtonStyle"
+                android:textColor="#fff"
+                android:textSize="16sp" />
+
+            <Button
+                style="?android:borderlessButtonStyle"
+                android:layout_width="120dp"
+                android:layout_height="120dp"
+                android:text="@string/explore"
+                android:id="@+id/explore_button"
+                android:background="@drawable/red_button"
+                android:textAllCaps="false"
+                android:textColor="#fff"
+                android:textSize="16sp"
+                android:layout_alignTop="@+id/profile_button"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true"
+                android:layout_marginLeft="30dp" />
+        </LinearLayout>
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/linearLayout5"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_marginTop="20dp"
+            android:layout_marginBottom="20dp"
+            android:gravity="center_vertical|center_horizontal">
+            <Button
+                style="?android:borderlessButtonStyle"
+                android:layout_width="120dp"
+                android:layout_height="120dp"
+                android:text="@string/contact_us_1"
+                android:id="@+id/contact_us_button"
+                android:background="@drawable/red_button"
+                android:textAllCaps="false"
+                android:textColor="#fff"
+                android:textSize="16sp"
+                android:layout_below="@+id/explore_button"
+                android:layout_alignLeft="@+id/explore_button"
+                android:layout_alignStart="@+id/explore_button" />
+
+            <Button
+                style="?android:borderlessButtonStyle"
+                android:layout_width="120dp"
+                android:layout_height="120dp"
+                android:text="@string/about_us_1"
+                android:id="@+id/about_us_button"
+                android:background="@drawable/red_button"
+                android:textAllCaps="false"
+                android:textColor="#fff"
+                android:textSize="16sp"
+                android:layout_alignTop="@+id/contact_us_button"
+                android:layout_alignLeft="@+id/profile_button"
+                android:layout_alignStart="@+id/profile_button"
+                android:layout_marginLeft="30dp" />
+        </LinearLayout>
+    </RelativeLayout>
+</RelativeLayout>
