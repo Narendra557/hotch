@@ -139,7 +139,8 @@
                     android:layout_marginLeft="10dp"
                     android:layout_alignParentRight="true"
                     android:layout_alignParentEnd="true"
-                    android:layout_marginRight="20dp" />
+                    android:layout_marginRight="20dp"
+                    android:onClick="categoryListClicked"/>
             </RelativeLayout>
 
             <RelativeLayout
@@ -243,7 +244,8 @@
                     android:gravity="left|center_vertical"
                     android:layout_toRightOf="@+id/textView58"
                     android:layout_toEndOf="@+id/textView58"
-                    android:layout_marginLeft="10dp" />
+                    android:layout_marginLeft="10dp"
+                    android:onClick="durationClick"/>
 
                 <EditText
                     android:layout_width="120dp"
@@ -390,7 +392,8 @@
                     android:layout_toRightOf="@+id/textView65"
                     android:layout_toEndOf="@+id/textView65"
                     android:layout_marginLeft="10dp"
-                    android:layout_marginRight="20dp" />
+                    android:layout_marginRight="20dp"
+                    android:onClick="eventTypeClick"/>
 
                 <TextView
                     android:layout_width="120dp"

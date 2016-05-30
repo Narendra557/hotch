@@ -33,12 +33,32 @@ public class RegisterPerson extends AsyncTask<String, Void, String> {
 
     @Override
     protected String doInBackground(String... args) {
-        String personTypeId = args[0];
-        String interestedIds = args[1];
-        String firstName = args[2];
-        String lastName = args[3];
-        String email = args[4];
-        String imageName = args[5];
+        String firstName = args[0];
+        String lastName = args[1];
+        String userName = args[2];
+        String password = args[3];
+        String message = args[4];
+        String dob = args[5];
+        String email = args[6];
+        String gender = args[7];
+        String imageName = args[8];
+        String catIds = args[9];
+        String sportingIds = args[10];
+        String gymIds = args[11];
+        String artsIds = args[12];
+        String relaxationIds = args[13];
+        String childrenIds = args[14];
+        String concernsIds = args[15];
+        String languagesIds = args[16];
+
+
+
+//        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+//        Date convertedDate = new Date();
+//            try {
+//                convertedDate = dateFormat.parse(dob);
+//            } catch (ParseException e) {
+//        }
 
         String link;
         String data;
@@ -46,12 +66,24 @@ public class RegisterPerson extends AsyncTask<String, Void, String> {
         String result=null;
 
         try {
-            data = "?person_type_id=" + URLEncoder.encode(personTypeId, "UTF-8");
-            data += "&interested_activity_ids=" + URLEncoder.encode(interestedIds, "UTF-8");
-            data += "&firstname=" + URLEncoder.encode(firstName, "UTF-8");
-            data += "&lastname=" + URLEncoder.encode(lastName, "UTF-8");
+            data = "?first_name=" + URLEncoder.encode(firstName, "UTF-8");
+            data += "&last_name=" + URLEncoder.encode(lastName, "UTF-8");
+            data += "&user_name=" + URLEncoder.encode(userName, "UTF-8");
+            data += "&password=" + URLEncoder.encode(password, "UTF-8");
+            data += "&message=" + URLEncoder.encode(message, "UTF-8");
+            data += "&dob=" + URLEncoder.encode(dob, "UTF-8");
             data += "&email=" + URLEncoder.encode(email, "UTF-8");
-            data += "&profilepic=" + URLEncoder.encode(imageName, "UTF-8");
+            data += "&gender=" + URLEncoder.encode(gender, "UTF-8");
+            data += "&profile_photo=" + URLEncoder.encode(imageName, "UTF-8");
+            data += "&category_ids=" + URLEncoder.encode(catIds, "UTF-8");
+            data += "&sprting_ids=" + URLEncoder.encode(sportingIds, "UTF-8");
+            data += "&gym_activities_ids=" + URLEncoder.encode(gymIds, "UTF-8");
+            data += "&arts_culture_ids=" + URLEncoder.encode(artsIds, "UTF-8");
+            data += "&relaxation_ids=" + URLEncoder.encode(relaxationIds, "UTF-8");
+            data += "&children_ids=" + URLEncoder.encode(childrenIds, "UTF-8");
+            data += "&concerns_ids=" + URLEncoder.encode(concernsIds, "UTF-8");
+            data += "&languages_ids=" + URLEncoder.encode(languagesIds, "UTF-8");
+
 
             link = "http://www.myhotch.com/app_control/register_user.php" + data;
             URL url = new URL(link);

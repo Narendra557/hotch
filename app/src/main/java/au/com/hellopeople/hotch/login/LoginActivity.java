@@ -8,14 +8,16 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import au.com.hellopeople.hotch.ForgotPasswordActivity;
 import au.com.hellopeople.hotch.ProfileActivity;
 import au.com.hellopeople.hotch.R;
-import au.com.hellopeople.hotch.register_offer_services.RegistertoOfferServicesActivity;
+import au.com.hellopeople.hotch.SellActivity;
 import au.com.hellopeople.hotch.register.RegisterActivity;
+import au.com.hellopeople.hotch.register_offer_services.RegistertoOfferServicesActivity;
 
-public class LoginActivity extends Activity implements View.OnClickListener {
+public class LoginActivity extends Activity implements View.OnClickListener, LoginCompleted {
     Button btRegister, btLogin, btRememberMe;
     EditText etUserName, etPassword;
     public static final String MyPREF = "MyPref" ;
@@ -29,20 +31,26 @@ public class LoginActivity extends Activity implements View.OnClickListener {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-//        Button loginButton = (Button) findViewById(R.id.login_button);
-//        loginButton.setOnClickListener(this);
-//        Button participateButton = (Button) findViewById(R.id.participate_button);
-//        participateButton.setOnClickListener(this);
-//        Button offerServicesButton = (Button) findViewById(R.id.offer_services_button);
-//        offerServicesButton.setOnClickListener(this);
-
-
 
         btRegister = (Button) findViewById(R.id.register_button);
         btLogin = (Button) findViewById(R.id.login_button);
-        btRememberMe = (Button) findViewById(R.id.login_button);
+//        btRememberMe = (Button) findViewById(R.id.login_button);
         etUserName = (EditText) findViewById(R.id.email_text);
         etPassword = (EditText) findViewById(R.id.password_text);
+    }
+
+    @Override
+    public void onLoginCompleted(String mFirstName, String mLastName, String mUserName, String mMessage, String mProfilePhoto) {
+//        if (result.equals("SUCCESS")){
+        Intent intent = new Intent(this, ProfileActivity.class);
+        intent.putExtra("first_name", mFirstName);
+        intent.putExtra("last_name", mLastName);
+        intent.putExtra("user_name", mUserName);
+        intent.putExtra("message", mMessage);
+        intent.putExtra("profile_photo", mProfilePhoto);
+        this.finish();
+        startActivity(intent);
+//        }
     }
 
     public void openRegisterActivity(View view) {
@@ -69,27 +77,25 @@ public class LoginActivity extends Activity implements View.OnClickListener {
     }
 
     public void loginValidation(View view) {
-//        userName = etUserName.getText().toString().trim();
-//        password = etPassword.getText().toString().trim();
-//        emailPattern = "[a-zA-Z0-9._-]+@[a-z]+\\.+[a-z]+";
-//
-//        if (userName.equals(null) || userName.equals("")){
-//            Toast.makeText(getApplicationContext(),"Please enter your email address", Toast.LENGTH_SHORT).show();
-//            etUserName.requestFocus();
-//        } else if (password.equals(null) || password.equals("")){
-//            Toast.makeText(getApplicationContext(),"Please enter your password", Toast.LENGTH_SHORT).show();
-//            etPassword.requestFocus();
-//        }
-//        else if (userName.matches(emailPattern)) {
-//            new LoginValidation(this).execute(userName, password);
-//        }
-//        else
-//        {
-//            Toast.makeText(getApplicationContext(),"Invalid email address", Toast.LENGTH_SHORT).show();
-//            etUserName.requestFocus();
-//        }
-        Intent intent = new Intent(this, ProfileActivity.class);
-        startActivity(intent);
+        userName = etUserName.getText().toString().trim();
+        password = etPassword.getText().toString().trim();
+        emailPattern = "[a-zA-Z0-9._-]+@[a-z]+\\.+[a-z]+";
+
+        if (userName.equals(null) || userName.equals("")){
+            Toast.makeText(getApplicationContext(), "Please enter your email address", Toast.LENGTH_SHORT).show();
+            etUserName.requestFocus();
+        } else if (password.equals(null) || password.equals("")){
+            Toast.makeText(getApplicationContext(),"Please enter your password", Toast.LENGTH_SHORT).show();
+            etPassword.requestFocus();
+        }
+        else if (userName.matches(emailPattern)) {
+            new LoginValidation(this).execute(userName, password);
+        }
+        else
+        {
+            Toast.makeText(getApplicationContext(),"Invalid email address or password", Toast.LENGTH_SHORT).show();
+            etUserName.requestFocus();
+        }
 
     }
 
@@ -125,5 +131,10 @@ public class LoginActivity extends Activity implements View.OnClickListener {
 //            Intent intent = new Intent(this, RegistertoOfferServicesActivity.class);
 //            startActivity(intent);
 //        }
+    }
+
+    public void sellOrShareClicked(View v){
+        Intent intent = new Intent(this, SellActivity.class);
+            startActivity(intent);
     }
 }
