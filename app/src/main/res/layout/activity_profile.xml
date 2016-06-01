@@ -301,7 +301,8 @@
                         android:gravity="center"
                         android:layout_alignParentRight="true"
                         android:layout_alignParentEnd="true"
-                        android:layout_marginRight="20dp" />
+                        android:layout_marginRight="20dp"
+                        android:onClick="openSettingsClick"/>
                 </RelativeLayout>
 
                 <RelativeLayout
@@ -358,7 +359,7 @@
                         android:layout_alignParentRight="true"
                         android:layout_alignParentEnd="true"
                         android:layout_marginRight="20dp"
-                        android:onClick="aboutHotchActivity" />
+                        android:onClick="openAboutUsClick" />
                 </RelativeLayout>
 
             </LinearLayout>
@@ -376,7 +377,8 @@
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="20dp"
                 android:layout_marginBottom="20dp"
-                android:layout_below="@+id/profile_id" />
+                android:layout_below="@+id/profile_id"
+                android:onClick="rememberMe"/>
 
         </RelativeLayout>
     </ScrollView>

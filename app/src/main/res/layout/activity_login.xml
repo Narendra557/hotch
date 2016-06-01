@@ -230,7 +230,8 @@
             android:textStyle="bold"
             android:background="#7f171f"
             android:paddingLeft="13dp"
-            android:paddingRight="13dp" />
+            android:paddingRight="13dp"
+            android:onClick="sellOrShareClicked"/>
 
         <Button
             style="?android:borderlessButtonStyle"

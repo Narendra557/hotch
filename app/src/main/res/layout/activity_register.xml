@@ -81,7 +81,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:id="@+id/personal_info_layout"
-                android:paddingBottom="20dp">
+                android:paddingBottom="20dp"
+                android:visibility="visible">
 
                 <LinearLayout
                     android:orientation="vertical"
@@ -120,7 +121,8 @@
                             android:layout_alignParentStart="true"
                             android:layout_marginLeft="20dp"
                             android:layout_marginTop="20dp"
-                            android:src="@drawable/profile_pic" />
+                            android:src="@drawable/profile_pic"
+                            android:onClick="profilePicChooser"/>
                     </RelativeLayout>
 
                     <RelativeLayout
@@ -312,7 +314,8 @@
                             android:layout_toRightOf="@+id/textView59"
                             android:layout_toEndOf="@+id/textView59"
                             android:layout_marginLeft="10dp"
-                            android:layout_marginRight="20dp" />
+                            android:layout_marginRight="20dp"
+                            android:onClick="dateOfBirthClick"/>
                     </RelativeLayout>
 
                     <RelativeLayout
@@ -337,7 +340,8 @@
                             android:layout_toRightOf="@+id/textView60"
                             android:layout_toEndOf="@+id/textView60"
                             android:layout_marginLeft="10dp"
-                            android:layout_marginRight="20dp" />
+                            android:layout_marginRight="20dp"
+                            android:onClick="genderClick"/>
 
                         <TextView
                             android:layout_width="120dp"
@@ -404,7 +408,8 @@
                             android:layout_centerVertical="true"
                             android:layout_toRightOf="@+id/textView61"
                             android:layout_toEndOf="@+id/textView61"
-                            android:layout_marginLeft="10dp" />
+                            android:layout_marginLeft="10dp"
+                            android:onClick="locationAllowClick"/>
                     </RelativeLayout>
 
                     <RelativeLayout
@@ -599,7 +604,8 @@
                             android:layout_marginRight="20dp"
                             android:layout_alignParentStart="true"
                             android:paddingLeft="10dp"
-                            android:layout_alignParentLeft="true" />
+                            android:layout_alignParentLeft="true"
+                            android:onClick="categoriesListClick"/>
                     </RelativeLayout>
 
                     <RelativeLayout
@@ -649,7 +655,8 @@
                             android:layout_marginLeft="20dp"
                             android:layout_marginRight="20dp"
                             android:layout_alignParentStart="true"
-                            android:layout_alignParentLeft="true" />
+                            android:layout_alignParentLeft="true"
+                            android:onClick="sportingButtonClick"/>
                     </RelativeLayout>
 
                     <RelativeLayout
@@ -681,7 +688,8 @@
                             android:layout_marginRight="20dp"
                             android:layout_alignParentStart="true"
                             android:layout_below="@+id/textView71"
-                            android:layout_alignParentLeft="true" />
+                            android:layout_alignParentLeft="true"
+                            android:onClick="gymButtonClick"/>
                     </RelativeLayout>
 
                     <RelativeLayout
@@ -713,7 +721,8 @@
                             android:layout_marginRight="20dp"
                             android:layout_alignParentStart="true"
                             android:layout_below="@+id/textView71"
-                            android:layout_alignParentLeft="true" />
+                            android:layout_alignParentLeft="true"
+                            android:onClick="artsButtonClick"/>
                     </RelativeLayout>
 
                     <RelativeLayout
@@ -745,7 +754,8 @@
                             android:layout_marginRight="20dp"
                             android:layout_alignParentStart="true"
                             android:layout_below="@+id/textView71"
-                            android:layout_alignParentLeft="true" />
+                            android:layout_alignParentLeft="true"
+                            android:onClick="relaxationButtonClick"/>
                     </RelativeLayout>
 
                     <RelativeLayout
@@ -777,7 +787,8 @@
                             android:layout_marginRight="20dp"
                             android:layout_alignParentStart="true"
                             android:layout_below="@+id/textView71"
-                            android:layout_alignParentLeft="true" />
+                            android:layout_alignParentLeft="true"
+                            android:onClick="childrenButtonClick"/>
                     </RelativeLayout>
 
                     <RelativeLayout
@@ -827,7 +838,8 @@
                             android:layout_marginLeft="20dp"
                             android:layout_marginRight="20dp"
                             android:layout_alignParentStart="true"
-                            android:layout_alignParentLeft="true" />
+                            android:layout_alignParentLeft="true"
+                            android:onClick="possibleIssueButtonClick"/>
                     </RelativeLayout>
 
                     <RelativeLayout
@@ -877,7 +889,8 @@
                             android:layout_marginLeft="20dp"
                             android:layout_marginRight="20dp"
                             android:layout_alignParentStart="true"
-                            android:layout_alignParentLeft="true" />
+                            android:layout_alignParentLeft="true"
+                            android:onClick="languagesButtonClick"/>
                     </RelativeLayout>
 
                 </LinearLayout>
@@ -892,7 +905,7 @@
                     android:textColor="@drawable/white_text_color"
                     android:textSize="12sp"
                     android:textAllCaps="false"
-                    android:onClick="backPage"
+                    android:onClick="backPage2"
                     android:drawableLeft="@drawable/back_double_arrow"
                     android:layout_centerHorizontal="true"
                     android:layout_marginTop="20dp"
@@ -915,7 +928,7 @@
                     android:textColor="@drawable/white_text_color"
                     android:textSize="12sp"
                     android:textAllCaps="false"
-                    android:onClick="nextPage1"
+                    android:onClick="nextPage2"
                     android:drawableRight="@drawable/next_arrow"
                     android:layout_centerHorizontal="true"
                     android:layout_marginTop="20dp"
@@ -1061,7 +1074,7 @@
                     android:textColor="@drawable/white_text_color"
                     android:textSize="12sp"
                     android:textAllCaps="false"
-                    android:onClick="backPage1"
+                    android:onClick="backPage3"
                     android:drawableLeft="@drawable/back_double_arrow"
                     android:paddingRight="13dp"
                     android:nestedScrollingEnabled="false"
@@ -1083,7 +1096,7 @@
                     android:textColor="@drawable/white_text_color"
                     android:textSize="12sp"
                     android:textAllCaps="false"
-                    android:onClick="nextPage2"
+                    android:onClick="nextPage3"
                     android:drawableRight="@drawable/next_arrow"
                     android:paddingLeft="13dp"
                     android:layout_alignParentEnd="true"
@@ -1176,7 +1189,7 @@
                     android:textColor="@drawable/white_text_color"
                     android:textSize="12sp"
                     android:textAllCaps="false"
-                    android:onClick="backPage2"
+                    android:onClick="backPage4"
                     android:drawableLeft="@drawable/back_double_arrow"
                     android:paddingRight="13dp"
                     android:nestedScrollingEnabled="false"
