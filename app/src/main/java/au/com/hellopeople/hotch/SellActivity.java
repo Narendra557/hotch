@@ -1,9 +1,8 @@
 package au.com.hellopeople.hotch;
 
-import android.app.Activity;
-import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -13,25 +12,31 @@ import android.widget.Toast;
 
 import java.util.List;
 
+import au.com.hellopeople.hotch.Activity.PostingOptionCompleted;
+import au.com.hellopeople.hotch.Activity.PostingOptionJSON;
+import au.com.hellopeople.hotch.Activity.SellOrShareActivity;
 import au.com.hellopeople.hotch.choose_category.CategoryCompleted;
 import au.com.hellopeople.hotch.choose_category.ChooseCategoryJSON;
-import au.com.hellopeople.hotch.register_offer_services.*;
 
-public class SellActivity extends AppCompatActivity implements CategoryCompleted {
+public class SellActivity extends AppCompatActivity implements CategoryCompleted, PostingOptionCompleted {
 
-    Button btChooseCategory, btDurationType, btTimeSelection, btPickupOption, btEventType, btPictureActivity, btVideoActivity, btCategories;
-    EditText etActivityNameText, etKeywordText, etDuration, etPrice, etShortDesc;
+    Button btChooseCategory, btDurationType, btTimeSelection, btPickupOption, btEventType, btPictureActivity, btVideoActivity, btCategories, btPostingOptions, btPickMyLocation;
+    EditText etActivityNameText, etKeywordText, etDuration, etPrice, etShortDesc, etAddress;
 
     List<String> categoryList;
-    String[] allCategories;
-    int[] allCategoriesIds;
-    String strSelectedCatIds;
+    String[] allCategories, allPostingOption, allPostingOptionPrices;
+    int[] allCategoriesIds, allPostingOptionIds;
+    String strSelectedCatIds, activityName, keywords, durationType, timeSelection, eventType, price, shortDesc, activityPictures, activityVideos, postingOption, poPrice;
+    int personId, categoryId, duration, pickupOption, poId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sell_activity);
+
+        SharedPreferences pref = getApplicationContext().getSharedPreferences("MyPref", MODE_PRIVATE);
+        personId = pref.getInt("personIdKey", 0);
+
 
         btChooseCategory = (Button)findViewById(R.id.chooseCategoryButton);
         btDurationType = (Button)findViewById(R.id.durationTypeButton);
@@ -40,16 +45,20 @@ public class SellActivity extends AppCompatActivity implements CategoryCompleted
         btEventType = (Button)findViewById(R.id.eventTypeButton);
         btPictureActivity = (Button)findViewById(R.id.picturesButton);
         btVideoActivity = (Button)findViewById(R.id.videosButton);
+        btPostingOptions = (Button)findViewById(R.id.postingOptionsButton);
+        btPickMyLocation = (Button)findViewById(R.id.pickCurrentLocationButton);
 
-        etActivityNameText = (EditText)findViewById(R.id.activity_name_text);
+        etActivityNameText = (EditText)findViewById(R.id.activityNameText);
         etKeywordText = (EditText)findViewById(R.id.keywordsText);
         etDuration = (EditText)findViewById(R.id.durationText);
         etPrice = (EditText)findViewById(R.id.priceText);
         etShortDesc = (EditText)findViewById(R.id.shortDescText);
+        etAddress = (EditText)findViewById(R.id.activityAddressText);
 
         btCategories = (Button)findViewById(R.id.chooseCategoryButton);
 
         new ChooseCategoryJSON(this).execute();
+        new PostingOptionJSON(this).execute();
     }
 
     public void myProfile(View v){
@@ -64,78 +73,24 @@ public class SellActivity extends AppCompatActivity implements CategoryCompleted
         allCategoriesIds = mAllCategoriesIds;
     }
 
+    @Override
+    public void onAllPOCompleted(String[] mAllPostingOptions, int[] mAllPostingOptionIds, String[] mAllPostingOptionPrices) {
+        allPostingOption = mAllPostingOptions;
+        allPostingOptionIds = mAllPostingOptionIds;
+        allPostingOptionPrices = mAllPostingOptionPrices;
+    }
+
     public void categoryListClicked(View v){
         try {
             if (allCategories.length > 0) {
-                final String[] selectedCategories = {""};
-                final String[] selectedCategoriesIds = {""};
                 final android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(this);
                 builder.setTitle("Make your selection");
-                final boolean[] chk = new boolean[allCategories.length];
-                String mCategory = btCategories.getText().toString();
-
-                for (int i = 0; i < allCategories.length; i++) {
-                    chk[i] = false;
-                }
-
-                String[] selectedArr = mCategory.split(", ");
-
-                for (int i = 0; i < selectedArr.length; i++) {
-                    for (int j = 0; j < allCategories.length; j++) {
-                        if (selectedArr[i].equals(allCategories[j]))
-                            chk[j] = true;
+                builder.setItems(allCategories, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int item) {
+                        btCategories.setText(allCategories[item]);
+                        categoryId = allCategoriesIds[item];
                     }
-                }
-
-                builder.setMultiChoiceItems(allCategories, chk,
-                        new DialogInterface.OnMultiChoiceClickListener() {
-                            String mSelectedCategories = "";
-
-                            public void onClick(DialogInterface dialog, int item, boolean isChecked) {
-                                if (isChecked)
-                                    chk[item] = true;
-                                else chk[item] = false;
-                            }
-                        });
-                builder.setPositiveButton("OK",
-                        new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                for (int i = 0; i < chk.length; i++) {
-                                    if (chk[i]) {
-                                        selectedCategories[0] += allCategories[i] + ", ";
-                                        selectedCategoriesIds[0] += allCategoriesIds[i] + ",";
-                                    }
-                                }
-                                if (selectedCategories[0].length() > 2)
-                                    btCategories.setText(selectedCategories[0].substring(0, selectedCategories[0].length() - 2));
-                                else btCategories.setText("Categories");
-                                //                        ListView list = ((android.app.AlertDialog) dialog).getListView();
-                                //ListView has boolean array like {1=true, 3=true}, that shows checked items
-
-                                strSelectedCatIds = "";
-                                for(String selectedIds : selectedCategoriesIds){
-                                    strSelectedCatIds += selectedIds;
-                                }
-                                if (strSelectedCatIds.length() > 1)
-                                    strSelectedCatIds = "{"+strSelectedCatIds.substring(0,strSelectedCatIds.length()-1)+"}";
-                                else strSelectedCatIds = "{}";
-//                                Toast.makeText(getApplicationContext(),strSelectedCatIds,Toast.LENGTH_SHORT).show();
-                            }
-                        });
-
-                builder.setNegativeButton("Cancel",
-                        new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                //                        ((TextView) myFilesActivity.findViewById(R.id.text)).setText("Click here to open Dialog");
-                            }
-                        });
-                //        builder.setItems(allCategories, new DialogInterface.OnClickListener() {
-                //            public void onClick(DialogInterface dialog, int item) {
-                //                btCategories.setText(allCategories[item]);
-                //            }
-                //        });
+                });
 
                 android.app.AlertDialog alert = builder.create();
                 alert.show();
@@ -199,7 +154,7 @@ public class SellActivity extends AppCompatActivity implements CategoryCompleted
             selectedItem = 1;
 
         final android.support.v7.app.AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(this);
-        builder.setTitle("Select the event type");
+        builder.setTitle("Select the Event Type");
         builder.setSingleChoiceItems(items,selectedItem, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int item) {
                 switch (item) {
@@ -232,6 +187,62 @@ public class SellActivity extends AppCompatActivity implements CategoryCompleted
 //        alert.show();
     }
 
+    public void pickupOptionClick(View view){
+        final CharSequence[] items = {"Yes", "No"};
+        int selectedItem = 0;
+        String x = btPickupOption.getText().toString();
+        if (btPickupOption.getText().toString().equals("Yes"))
+            selectedItem = 0;
+        else
+            selectedItem = 1;
+
+        final android.support.v7.app.AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(this);
+        builder.setTitle("Select the Pickup Option");
+        builder.setSingleChoiceItems(items,selectedItem, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int item) {
+                switch (item) {
+                    case 0:
+                        btPickupOption.setText("Yes");
+                        break;
+                    case 1:
+                        btPickupOption.setText("No");
+                        break;
+                }
+                dialog.dismiss();
+            }
+        });
+
+        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                dialog.cancel();
+            }
+        });
+        builder.create().show();
+    }
+
+    public void postingOptionClick(View v){
+        try {
+            if (allPostingOption.length > 0) {
+                final android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(this);
+                builder.setTitle("Make your selection");
+                builder.setItems(allPostingOption, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int item) {
+                        btPostingOptions.setText(allPostingOption[item]);
+                        poId = allPostingOptionIds[item];
+                        poPrice = allPostingOptionPrices[item];
+                    }
+                });
+
+                android.app.AlertDialog alert = builder.create();
+                alert.show();
+            }else {
+                Toast.makeText(this,"No data connection found, try again", Toast.LENGTH_SHORT).show();
+            }
+        } catch (Exception e){
+            Toast.makeText(this,"No data connection found, try again",Toast.LENGTH_SHORT).show();
+        }
+    }
+
     public void exploreActivitiesActivity(View view) {
         Intent intent = new Intent(this, ExploreActivity.class);
         startActivity(intent);
@@ -254,4 +265,32 @@ public class SellActivity extends AppCompatActivity implements CategoryCompleted
         startActivity(intent);
         finish();
     }
+
+    public void postActivity(View v){
+
+        activityName = etActivityNameText.getText().toString();
+        keywords = etKeywordText.getText().toString();
+
+        if (btPickupOption.getText().toString().equals("Yes")) pickupOption = 1;
+        else pickupOption = 0;
+        eventType = btEventType.getText().toString();
+        price = etPrice.getText().toString();
+
+        new SellOrShareActivity(this).execute(String.valueOf(personId),String.valueOf(categoryId),activityName,keywords,String.valueOf(pickupOption),eventType,price);
+
+
+    }
+
+    public void pickMyLocationClick(View view){
+        if (btPickMyLocation.getText().toString().equals("Pick my current location")){
+            btPickMyLocation.setText("Do not pick my location");
+            btPickMyLocation.setCompoundDrawablesWithIntrinsicBounds(R.drawable.remember_me_deselect_grey, 0, 0, 0);
+            etAddress.setEnabled(true);
+        } else {
+            btPickMyLocation.setText("Pick my current location");
+            btPickMyLocation.setCompoundDrawablesWithIntrinsicBounds(R.drawable.remember_me_select_grey, 0, 0, 0);
+            etAddress.setEnabled(false);
+        }
+    }
+
 }

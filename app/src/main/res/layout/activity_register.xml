@@ -82,7 +82,7 @@
                 android:layout_height="match_parent"
                 android:id="@+id/personal_info_layout"
                 android:paddingBottom="20dp"
-                android:visibility="visible">
+                android:visibility="gone">
 
                 <LinearLayout
                     android:orientation="vertical"
@@ -511,7 +511,7 @@
                 android:layout_height="match_parent"
                 android:id="@+id/about_yourself_layout"
                 android:paddingBottom="20dp"
-                android:visibility="gone">
+                android:visibility="visible">
 
                 <TextView
                     android:layout_width="match_parent"
