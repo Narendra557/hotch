@@ -4,15 +4,19 @@ import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.ClipData;
+import android.content.ContentResolver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentSender;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.preference.PreferenceManager;
 import android.provider.MediaStore;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -25,9 +29,25 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ExpandableListView;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
+import android.widget.TextView;
 import android.widget.Toast;
+
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GoogleApiAvailability;
+import com.google.android.gms.common.GooglePlayServicesUtil;
+import com.google.android.gms.common.SignInButton;
+import com.google.android.gms.common.api.CommonStatusCodes;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.ResultCallback;
+import com.google.android.gms.common.api.Status;
+import com.google.android.gms.plus.People;
+import com.google.android.gms.plus.Plus;
+import com.google.android.gms.plus.PlusShare;
+import com.google.android.gms.plus.model.people.Person;
+import com.google.android.gms.plus.model.people.PersonBuffer;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -63,11 +83,36 @@ import au.com.hellopeople.hotch.register.interests.SubInterestCompleted;
 import au.com.hellopeople.hotch.register_offer_services.DatePickerFragment;
 import au.com.hellopeople.hotch.util.StaticData;
 
-public class RegisterActivity extends AppCompatActivity implements RegisterCompleted, CategoryCompleted, SubInterestCompleted, ConcernCompleted, LanguageCompleted {
+public class RegisterActivity extends AppCompatActivity implements RegisterCompleted, CategoryCompleted, SubInterestCompleted, ConcernCompleted, LanguageCompleted, GoogleApiClient.OnConnectionFailedListener, View.OnClickListener, GoogleApiClient.ConnectionCallbacks, ResultCallback<People.LoadPeopleResult> {
+    private static final int PICK_MEDIA_REQUEST_CODE = 8;
+    private static final int SHARE_MEDIA_REQUEST_CODE = 9;
+    private static final int SIGN_IN_REQUEST_CODE = 0;
+    private static final int ERROR_DIALOG_REQUEST_CODE = 11;
+
+    // For communicating with Google APIs
+    private GoogleApiClient mGoogleApiClient;
+    private boolean mSignInClicked;
+    private boolean mIntentInProgress;
+    // contains all possible error codes for when a client fails to connect to
+    // Google Play services
+    private ConnectionResult mConnectionResult;
+
+
+    GoogleApiClient google_api_client;
+    GoogleApiAvailability google_api_availability;
+    SignInButton signIn_btn;
+    private static final int SIGN_IN_CODE = 0;
+    private static final int PROFILE_PIC_SIZE = 120;
+    private ConnectionResult connection_result;
+    private boolean is_intent_inprogress;
+    private boolean is_signInBtn_clicked;
+    private int request_code;
+    ProgressDialog progress_dialog;
 
     String firstName, lastName, personType, email, userName, password, message, dob, gender, rePassword, emailPattern;
     EditText etFirstName, etLastName, etEmail, etPassword, etRePassword, etUserName, etMessage;
-    Button  btRegister, btProfilePicUploader, btPostNow, btLocAllow, btDateOfBirth, btDob, btGender, btCategories, btSporting, btGym, btArts, btRelaxation, btChildren, btPossibleIssues, btLanguages;
+    Button  btRegister, btProfilePicUploader, btPostNow, btLocAllow, btDateOfBirth, btDob, btGender, btCategories, btSporting, btGym, btArts, btRelaxation, btChildren, btPossibleIssues, btLanguages,
+            googlePlusButton;
     ImageView ivProfilePic;
     RelativeLayout personalInfoLayout, aboutYourSelfLayout, linkYourAccLayout, sellingOrSharingLayout;
     public int personTypeId;
@@ -93,7 +138,7 @@ public class RegisterActivity extends AppCompatActivity implements RegisterCompl
     String[] allCategories, sportingInterests, gymInterests, artsInterests, relaxationInterests, childrenInterests, allConcerns, allLanguages = null;
     int[] allCategoriesIds, allConcernsIds, allLanguagesIds;
     String[] sportingInterestsIds, gymInterestsIds, artsInterestsIds, relaxationInterestsIds, childrenInterestsIds;
-    String strSelectedCatIds="", strSelectedSportingIds="", strSelectedGymIds="", strSelectedArtsIds="", strSelectedRelaxationIds="", strSelectedChildrenIds="", strSelectedConcernsIds="", strSelectedLanguagesIds="";
+    String strSelectedCatIds="{}", strSelectedSportingIds="{}", strSelectedGymIds="{}", strSelectedArtsIds="{}", strSelectedRelaxationIds="{}", strSelectedChildrenIds="{}", strSelectedConcernsIds="{}", strSelectedLanguagesIds="{}";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -138,7 +183,50 @@ public class RegisterActivity extends AppCompatActivity implements RegisterCompl
 //        personalInfoLayout.setVisibility(View.VISIBLE);
 //        aboutYourSelfLayout.setVisibility(View.GONE);
         createDialogInterests();
+        // Initializing google plus api client
+        mGoogleApiClient = buildGoogleAPIClient();
 
+        googlePlusButton = (Button) findViewById(R.id.google_plus_button);
+
+
+        SharedPreferences prefs = PreferenceManager
+                .getDefaultSharedPreferences(this);
+        String googleemail = prefs.getString("Hotch_google_plus_email", "No");
+
+        if (!googleemail.equalsIgnoreCase("No")) {
+            googlePlusButton.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.remember_me_select, 0);
+        } else  {
+            googlePlusButton.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
+        }
+    }
+
+    /**
+     * API to return GoogleApiClient Make sure to create new after revoking
+     * access or for first time sign in
+     *
+     * @return
+     */
+    private GoogleApiClient buildGoogleAPIClient() {
+        return new GoogleApiClient.Builder(this).addConnectionCallbacks(this)
+                .addOnConnectionFailedListener(this)
+                .addApi(Plus.API, Plus.PlusOptions.builder().build())
+                .addScope(Plus.SCOPE_PLUS_LOGIN)
+                .addScope(Plus.SCOPE_PLUS_PROFILE).build();
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        // make sure to initiate connection
+        mGoogleApiClient.connect();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        // disconnect api if it is connected
+        if (mGoogleApiClient.isConnected())
+            mGoogleApiClient.disconnect();
     }
 
     public void nextPage(View view) {
@@ -210,8 +298,69 @@ public class RegisterActivity extends AppCompatActivity implements RegisterCompl
     }
 
     public void nextPage2(View v){
-        aboutYourSelfLayout.setVisibility(View.GONE);
-        linkYourAccLayout.setVisibility(View.VISIBLE);
+        if (strSelectedCatIds.equalsIgnoreCase("{}")) {
+            Toast.makeText(this, "Please select at-least an one category!", Toast.LENGTH_SHORT).show();
+        } else if (strSelectedSportingIds.equalsIgnoreCase("{}") && strSelectedGymIds.equalsIgnoreCase("{}") && strSelectedArtsIds.equalsIgnoreCase("{}")
+                && strSelectedRelaxationIds.equalsIgnoreCase("{}") && strSelectedChildrenIds.equalsIgnoreCase("{}")) {
+            Toast.makeText(this, "Please select at-least an one interest!", Toast.LENGTH_SHORT).show();
+        } else if (strSelectedConcernsIds.equalsIgnoreCase("{}")) {
+            Toast.makeText(this, "Please select at-least an one concern!", Toast.LENGTH_SHORT).show();
+        } else if (strSelectedLanguagesIds.equalsIgnoreCase("{}")) {
+            Toast.makeText(this, "Please select at-least an one language!", Toast.LENGTH_SHORT).show();
+        } else {
+            aboutYourSelfLayout.setVisibility(View.GONE);
+            linkYourAccLayout.setVisibility(View.VISIBLE);
+        }
+    }
+
+    public void googlePlusClick(View v){
+        android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(
+                RegisterActivity.this);
+        builder.setTitle("Google+");
+        String[] optionsList = { "Sign In", "Sign Out", "Share" };
+        builder.setItems(optionsList,
+                new DialogInterface.OnClickListener() {
+
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        // TODO Auto-generated method stub
+
+                        if (which == 0) {
+                            processSignIn();
+                        } else if (which == 1) {
+                            processSignOut();
+                        } else if (which == 2) {
+
+                        }
+                        dialog.cancel();
+                    }
+
+                });
+        builder.show();
+    }
+
+    public void facebookClick(View v){
+
+    }
+
+    public void twitterClick(View v){
+
+    }
+
+    public void linkedInClick(View v){
+
+    }
+
+    public void instagramClick(View v){
+
+    }
+
+    public void paypalClick(View v){
+
+    }
+
+    public void creditCardClick(View v){
+
     }
 
     public void backPage2(View v){
@@ -555,6 +704,34 @@ public class RegisterActivity extends AppCompatActivity implements RegisterCompl
             File file = new File(Fpath);
             imageName = file.getName();
         }
+
+        if (requestCode == SIGN_IN_REQUEST_CODE) {
+            if (resultCode != RESULT_OK) {
+                mSignInClicked = false;
+            }
+
+            mIntentInProgress = false;
+
+            if (!mGoogleApiClient.isConnecting()) {
+                mGoogleApiClient.connect();
+            }
+        } else if (requestCode == PICK_MEDIA_REQUEST_CODE) {
+            // If picking media is success, create share post using
+            // PlusShare.Builder
+            if (resultCode == RESULT_OK) {
+                Uri selectedImage = data.getData();
+                ContentResolver cr = this.getContentResolver();
+                String mime = cr.getType(selectedImage);
+
+                PlusShare.Builder share = new PlusShare.Builder(this);
+                share.setText("Hello from AndroidSRC.net");
+                share.addStream(selectedImage);
+                share.setType(mime);
+                startActivityForResult(share.getIntent(),
+                        SHARE_MEDIA_REQUEST_CODE);
+            }
+        }
+
     }
 
     public String getPath(Uri uri) {
@@ -708,6 +885,208 @@ public class RegisterActivity extends AppCompatActivity implements RegisterCompl
     public void onLanguageListCompleted(String[] mAllLanguages, int[] mAllLanguagesIds) {
         allLanguages = mAllLanguages;
         allLanguagesIds = mAllLanguagesIds;
+    }
+
+    @Override
+    public void onClick(View v) {
+
+    }/**
+     * API to revoke granted access After revoke user will be asked to grant
+     * permission on next sign in
+     */
+    private void processRevokeRequest() {
+        if (mGoogleApiClient.isConnected()) {
+            Plus.AccountApi.clearDefaultAccount(mGoogleApiClient);
+            Plus.AccountApi.revokeAccessAndDisconnect(mGoogleApiClient)
+                    .setResultCallback(new ResultCallback<Status>() {
+                        @Override
+                        public void onResult(Status arg0) {
+                            Toast.makeText(getApplicationContext(),
+                                    "User permissions revoked",
+                                    Toast.LENGTH_LONG).show();
+                            mGoogleApiClient = buildGoogleAPIClient();
+                            mGoogleApiClient.connect();
+//                            processUIUpdate(false);
+                        }
+
+                    });
+
+        }
+
+    }
+
+    /**
+     * API to process media post request start activity with MIME type as video
+     * and image
+     */
+    private void processShareMedia() {
+        Intent photoPicker = new Intent(Intent.ACTION_PICK);
+        photoPicker.setType("video/*, image/*");
+        startActivityForResult(photoPicker, PICK_MEDIA_REQUEST_CODE);
+
+    }
+
+    /**
+     * API to process post share request Use PlusShare.Builder to create share
+     * post.
+     */
+    private void processSharePost() {
+        // Launch the Google+ share dialog with attribution to your app.
+        Intent shareIntent = new PlusShare.Builder(this).setType("text/plain")
+                .setText("Google+ Demo http://androidsrc.net")
+                .setContentUrl(Uri.parse("http://androidsrc.net")).getIntent();
+
+        startActivityForResult(shareIntent, 0);
+
+    }
+
+    /**
+     * API to handle sign out of user
+     */
+    private void processSignOut() {
+        SharedPreferences prefs = PreferenceManager
+                .getDefaultSharedPreferences(RegisterActivity.this);
+        SharedPreferences.Editor ed = prefs.edit();
+        ed.putString("Hotch_google_plus_email", "No");
+        ed.commit();
+        googlePlusButton.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
+        if (mGoogleApiClient.isConnected()) {
+            Plus.AccountApi.clearDefaultAccount(mGoogleApiClient);
+            mGoogleApiClient.disconnect();
+            mGoogleApiClient.connect();
+
+//            processUIUpdate(false);
+        }
+
+    }
+
+    /**
+     * API to handler sign in of user If error occurs while connecting process
+     * it in processSignInError() api
+     */
+    private void processSignIn() {
+
+        if (!mGoogleApiClient.isConnecting()) {
+            processSignInError();
+            mSignInClicked = true;
+        }
+
+    }
+
+    /**
+     * API to process sign in error Handle error based on ConnectionResult
+     */
+    private void processSignInError() {
+        if (mConnectionResult != null && mConnectionResult.hasResolution()) {
+            try {
+                mIntentInProgress = true;
+                mConnectionResult.startResolutionForResult(this,
+                        SIGN_IN_REQUEST_CODE);
+            } catch (IntentSender.SendIntentException e) {
+                mIntentInProgress = false;
+                mGoogleApiClient.connect();
+            }
+        }
+    }
+
+    @Override
+    public void onConnected(Bundle bundle) {
+        if (mSignInClicked) {
+            mSignInClicked = false;
+            Toast.makeText(getApplicationContext(), "Signed In Successfully",
+                    Toast.LENGTH_LONG).show();
+
+            processUserInfoAndUpdateUI();
+        }
+
+//        processUIUpdate(true);
+    }
+
+    @Override
+    public void onConnectionSuspended(int i) {
+        mGoogleApiClient.connect();
+    }
+
+    @Override
+    public void onConnectionFailed(ConnectionResult result) {
+        if (!result.hasResolution()) {
+            GooglePlayServicesUtil.getErrorDialog(result.getErrorCode(), this,
+                    ERROR_DIALOG_REQUEST_CODE).show();
+            return;
+        }
+        if (!mIntentInProgress) {
+            mConnectionResult = result;
+
+            if (mSignInClicked) {
+                processSignInError();
+            }
+        }
+    }
+    /**
+     * API to update signed in user information
+     */
+    private void processUserInfoAndUpdateUI() {
+        Person signedInUser = Plus.PeopleApi.getCurrentPerson(mGoogleApiClient);
+        if (signedInUser != null) {
+
+            System.out.println("name - "+signedInUser.getDisplayName());
+            System.out.println("email - "+Plus.AccountApi.getAccountName(mGoogleApiClient));
+
+            SharedPreferences prefs = PreferenceManager
+                    .getDefaultSharedPreferences(RegisterActivity.this);
+            SharedPreferences.Editor ed = prefs.edit();
+            ed.putString("Hotch_google_plus_name", signedInUser.getDisplayName());
+            ed.putString("Hotch_google_plus_email", Plus.AccountApi.getAccountName(mGoogleApiClient));
+            ed.commit();
+            googlePlusButton.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.remember_me_select, 0);
+//            if (signedInUser.hasDisplayName()) {
+//                String userName = signedInUser.getDisplayName();
+//                this.userName.setText("Name: " + userName);
+//            }
+//
+//            if (signedInUser.hasTagline()) {
+//                String tagLine = signedInUser.getTagline();
+//                this.userTagLine.setText("TagLine: " + tagLine);
+//                this.userTagLine.setVisibility(View.VISIBLE);
+//            }
+//
+//            if (signedInUser.hasAboutMe()) {
+//                String aboutMe = signedInUser.getAboutMe();
+//                this.userAboutMe.setText("About Me: " + aboutMe);
+//                this.userAboutMe.setVisibility(View.VISIBLE);
+//            }
+//
+//            if (signedInUser.hasBirthday()) {
+//                String birthday = signedInUser.getBirthday();
+//                this.userBirthday.setText("DOB " + birthday);
+//                this.userBirthday.setVisibility(View.VISIBLE);
+//            }
+//
+//            if (signedInUser.hasCurrentLocation()) {
+//                String userLocation = signedInUser.getCurrentLocation();
+//                this.userLocation.setText("Location: " + userLocation);
+//                this.userLocation.setVisibility(View.VISIBLE);
+//            }
+//
+//            String userEmail = Plus.AccountApi.getAccountName(mGoogleApiClient);
+//            this.userEmail.setText("Email: " + userEmail);
+//
+//            if (signedInUser.hasImage()) {
+//                String userProfilePicUrl = signedInUser.getImage().getUrl();
+//                // default size is 50x50 in pixels.changes it to desired size
+//                int profilePicRequestSize = 250;
+//
+//                userProfilePicUrl = userProfilePicUrl.substring(0,
+//                        userProfilePicUrl.length() - 2) + profilePicRequestSize;
+//                new UpdateProfilePicTask(userProfilePic)
+//                        .execute(userProfilePicUrl);
+//            }
+
+        }
+    }
+    @Override
+    public void onResult(People.LoadPeopleResult loadPeopleResult) {
+
     }
 
 

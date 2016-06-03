@@ -207,4 +207,7 @@
     <string name="our_events1">OUR EVENTS</string>
     <string name="trending_now">TRENDING NOW</string>
     <string name="activity_address">Activity Address</string>
+    <string name="social_media">Social Media</string>
+    <string name="payment_gateway">Payment Gateway</string>
+    <string name="server_client_id">706098211443-2fqt13his1eqcbc4taa781asnkjgfc3c.apps.googleusercontent.com</string>
 </resources>
