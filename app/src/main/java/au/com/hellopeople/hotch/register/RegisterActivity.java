@@ -96,6 +96,7 @@ import au.com.hellopeople.hotch.register.interests.Sports;
 import au.com.hellopeople.hotch.register.interests.SportsAdapterExp;
 import au.com.hellopeople.hotch.register.interests.SubInterestCompleted;
 import au.com.hellopeople.hotch.register_offer_services.DatePickerFragment;
+import au.com.hellopeople.hotch.util.ApplicationData;
 import au.com.hellopeople.hotch.util.StaticData;
 
 public class RegisterActivity extends AppCompatActivity implements RegisterCompleted, CategoryCompleted, SubInterestCompleted, ConcernCompleted, LanguageCompleted, GoogleApiClient.OnConnectionFailedListener, View.OnClickListener, GoogleApiClient.ConnectionCallbacks, ResultCallback<People.LoadPeopleResult> {
@@ -117,7 +118,7 @@ public class RegisterActivity extends AppCompatActivity implements RegisterCompl
     String firstName, lastName, personType, email, userName, password, message, dob, gender, rePassword, emailPattern;
     EditText etFirstName, etLastName, etEmail, etPassword, etRePassword, etUserName, etMessage;
     Button  btRegister, btProfilePicUploader, btPostNow, btLocAllow, btDateOfBirth, btDob, btGender, btCategories, btSporting, btGym, btArts, btRelaxation, btChildren, btPossibleIssues, btLanguages,
-            googlePlusButton, facebookLoginButton, twitterButton;
+            googlePlusButton, facebookLoginButton, twitterButton, instagramButton;
     LoginButton facebookButton;
     private int FACEBOOK_REQUEST_CODE = 15;
     private int TWITTER_REQUEST_CODE = 80;
@@ -152,6 +153,12 @@ public class RegisterActivity extends AppCompatActivity implements RegisterCompl
 
 
     private CallbackManager callbackManager;
+
+    public static final String CLIENT_ID = "4d475bf8d5e140c89c2fbe30690c805c";
+    public static final String CLIENT_SECRET = "b0df391091d6458aadd1124ea50b2162";
+    public static final String CALLBACK_URL = "http://myhotch.com/";
+
+    private InstagramApp mApp;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -281,11 +288,20 @@ public class RegisterActivity extends AppCompatActivity implements RegisterCompl
             }
         });
 
+        mApp = new InstagramApp(this, ApplicationData.CLIENT_ID,
+                ApplicationData.CLIENT_SECRET, ApplicationData.CALLBACK_URL);
+        mApp.setListener(listener);
+
+
+        instagramButton = (Button) findViewById(R.id.instagram_button);
+
+
         SharedPreferences prefs = PreferenceManager
                 .getDefaultSharedPreferences(this);
         String googleemail = prefs.getString("Hotch_google_plus_email", "No");
         String facebookname = prefs.getString("Hotch_facebook_name", "No");
         String twittername = prefs.getString("Hotch_twitter_name", "No");
+        String instagramname = prefs.getString("Hotch_instagram_name", "No");
 
         if (!googleemail.equalsIgnoreCase("No")) {
             googlePlusButton.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.remember_me_select, 0);
@@ -302,7 +318,30 @@ public class RegisterActivity extends AppCompatActivity implements RegisterCompl
         } else  {
             twitterButton.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
         }
+        if (!instagramname.equalsIgnoreCase("No")) {
+            instagramButton.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.remember_me_select, 0);
+        } else  {
+            instagramButton.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
+        }
     }
+
+    InstagramApp.OAuthAuthenticationListener listener = new InstagramApp.OAuthAuthenticationListener() {
+
+        @Override
+        public void onSuccess() {
+            SharedPreferences prefs = PreferenceManager
+                    .getDefaultSharedPreferences(RegisterActivity.this);
+            SharedPreferences.Editor ed = prefs.edit();
+            ed.putString("Hotch_instagram_name", mApp.getUserName());
+            ed.commit();
+            instagramButton.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.remember_me_select, 0);
+        }
+
+        @Override
+        public void onFail(String error) {
+            Toast.makeText(RegisterActivity.this, error, Toast.LENGTH_SHORT).show();
+        }
+    };
 
     /**
      * API to return GoogleApiClient Make sure to create new after revoking
@@ -487,6 +526,17 @@ public class RegisterActivity extends AppCompatActivity implements RegisterCompl
         twitterButton.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
     }
 
+    public void instagramSignOut() {
+        mApp.resetAccessToken();
+
+        SharedPreferences prefs = PreferenceManager
+                .getDefaultSharedPreferences(RegisterActivity.this);
+        SharedPreferences.Editor ed = prefs.edit();
+        ed.putString("Hotch_instagram_name", "No");
+        ed.commit();
+        instagramButton.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
+    }
+
     public void twitterClick(View v){
         android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(
                 RegisterActivity.this);
@@ -542,7 +592,29 @@ public class RegisterActivity extends AppCompatActivity implements RegisterCompl
     }
 
     public void instagramClick(View v){
+        android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(
+                RegisterActivity.this);
+        builder.setTitle("Instagram");
+        String[] optionsList = { "Sign In", "Sign Out", "Share" };
+        builder.setItems(optionsList,
+                new DialogInterface.OnClickListener() {
 
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        // TODO Auto-generated method stub
+
+                        if (which == 0) {
+                            mApp.authorize();
+                        } else if (which == 1) {
+                            instagramSignOut();
+                        } else if (which == 2) {
+
+                        }
+                        dialog.cancel();
+                    }
+
+                });
+        builder.show();
     }
 
     public void paypalClick(View v){

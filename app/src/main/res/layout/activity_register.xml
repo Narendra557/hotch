@@ -81,7 +81,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:id="@+id/personal_info_layout"
-                android:paddingBottom="20dp">
+                android:paddingBottom="20dp"
+                android:visibility="gone">
 
                 <LinearLayout
                     android:orientation="vertical"
@@ -915,8 +916,7 @@
                 android:id="@+id/link_your_accounts_layout"
                 android:layout_alignParentEnd="false"
                 android:layout_alignParentBottom="false"
-                android:paddingBottom="20dp"
-                android:visibility="gone">
+                android:paddingBottom="20dp">
 
                 <TextView
                     android:layout_width="match_parent"
@@ -1033,7 +1033,7 @@
                         style="?android:borderlessButtonStyle"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:id="@+id/button18"
+                        android:id="@+id/instagram_button"
                         android:layout_weight="1"
                         android:layout_marginLeft="5dp"
                         android:layout_marginRight="5dp"
