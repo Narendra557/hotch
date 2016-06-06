@@ -1,0 +1,56 @@
+{
+  "project_info": {
+    "project_number": "706098211443",
+    "project_id": "hotch-1330"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:706098211443:android:9a1a45b2acf3e84e",
+        "android_client_info": {
+          "package_name": "au.com.hellopeople.hotch"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "706098211443-e8tlstv4e146hmsncevhn8locmq4llce.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "au.com.hellopeople.hotch",
+            "certificate_hash": "95CBAB260FCA472923260DCC89F79DD028E031EF"
+          }
+        },
+        {
+          "client_id": "706098211443-2fqt13his1eqcbc4taa781asnkjgfc3c.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "au.com.hellopeople.hotch",
+            "certificate_hash": "861F87F2AE297E30B769315836E4997C06421475"
+          }
+        },
+        {
+          "client_id": "706098211443-ulb69jnbgtbt6kq55sn69fun0onv5309.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCM5D7O1sHi1ULLV6a0pNz54jo7reJ4xwE"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 1
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -78,7 +78,7 @@ public class LoginValidation extends AsyncTask<String,Void,String> {
                     // Get the JSONObject ...........................
                     JSONObject profileObj = profileArr.getJSONObject(0);
                     if (profileObj != null) {
-//                            int concernId = concernObj.getInt("c_id");
+                        int personId = profileObj.getInt("person_id");
                         String firstName = profileObj.getString("first_name").toString();
                         String lastName = profileObj.getString("last_name").toString();
                         String userName = profileObj.getString("username").toString();
@@ -87,7 +87,7 @@ public class LoginValidation extends AsyncTask<String,Void,String> {
 
 //                            profile[i] = firstName;
 //                            allConcernsIds[i] = concernId;
-                        mCallBack.onLoginCompleted(firstName, lastName, userName, message, profilePhoto);
+                        mCallBack.onLoginCompleted(personId, firstName, lastName, userName, message, profilePhoto);
                     }
 //                    }
 //                    mCallBack.onConcernCompleted(allConcerns, allConcernsIds);

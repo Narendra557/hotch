@@ -22,10 +22,12 @@ public class LoginActivity extends Activity implements View.OnClickListener, Log
     EditText etUserName, etPassword;
     public static final String MyPREF = "MyPref" ;
     public static final String rememberKey = "rememberKey";
+    public static final String personIdKey = "personIdKey";
     SharedPreferences sharedpreferences;
     int isRemember = 0;
     String userName, password, emailPattern;
     public int personTypeId;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,12 +39,18 @@ public class LoginActivity extends Activity implements View.OnClickListener, Log
 //        btRememberMe = (Button) findViewById(R.id.login_button);
         etUserName = (EditText) findViewById(R.id.email_text);
         etPassword = (EditText) findViewById(R.id.password_text);
+        sharedpreferences = getSharedPreferences(MyPREF, Context.MODE_PRIVATE);
     }
 
     @Override
-    public void onLoginCompleted(String mFirstName, String mLastName, String mUserName, String mMessage, String mProfilePhoto) {
+    public void onLoginCompleted(int mPersonId, String mFirstName, String mLastName, String mUserName, String mMessage, String mProfilePhoto) {
 //        if (result.equals("SUCCESS")){
+        SharedPreferences.Editor editor = sharedpreferences.edit();
+        editor.putInt(personIdKey, mPersonId);
+        editor.commit();
+
         Intent intent = new Intent(this, ProfileActivity.class);
+        intent.putExtra("person_id", mPersonId);
         intent.putExtra("first_name", mFirstName);
         intent.putExtra("last_name", mLastName);
         intent.putExtra("user_name", mUserName);

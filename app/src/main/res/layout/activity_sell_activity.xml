@@ -115,7 +115,6 @@
                     android:text="@string/choose_a_category"
                     android:id="@+id/textView38"
                     android:layout_alignTop="@+id/email_text"
-                    android:layout_alignStart="@+id/personMessageText"
                     android:textColor="#fff"
                     android:gravity="center_vertical"
                     android:textSize="11sp"
@@ -158,7 +157,6 @@
                     android:id="@+id/textView54"
                     android:textColor="#fff"
                     android:gravity="center_vertical"
-                    android:layout_alignStart="@+id/textView38"
                     android:textSize="11sp"
                     android:layout_marginLeft="20dp" />
 
@@ -180,12 +178,66 @@
                     android:layout_marginLeft="10dp"
                     android:layout_marginRight="20dp" />
             </RelativeLayout>
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:id="@+id/address_id"
+                android:layout_marginTop="5dp"
+                android:layout_below="@+id/activity_name_id" >
 
+                <EditText
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:inputType="textMultiLine"
+                    android:background="@drawable/dark_white_round_corners"
+                    android:ems="10"
+                    android:textColor="@color/white_color"
+                    android:id="@+id/activityAddressText"
+                    android:textColorHint="@color/white_color"
+                    android:textSize="11sp"
+                    android:layout_alignParentRight="true"
+                    android:layout_alignParentEnd="true"
+                    android:layout_toRightOf="@+id/textView17"
+                    android:layout_toEndOf="@+id/textView17"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="20dp" />
+
+                <TextView
+                    android:layout_width="120dp"
+                    android:layout_height="40dp"
+                    android:textAppearance="?android:attr/textAppearanceSmall"
+                    android:text="@string/activity_address"
+                    android:id="@+id/textView17"
+                    android:textColor="@color/white_color"
+                    android:gravity="center_vertical"
+                    android:textSize="11sp"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginTop="5dp" />
+
+                <Button
+                    style="?android:borderlessButtonStyle"
+                    android:layout_width="190dp"
+                    android:layout_height="30dp"
+                    android:text="@string/pick_my_current_location"
+                    android:id="@+id/pickCurrentLocationButton"
+                    android:drawableLeft="@drawable/remember_me_select_grey"
+                    android:background="@color/transperent_color"
+                    android:textColor="@color/white_color"
+                    android:textSize="13sp"
+                    android:paddingBottom="5dp"
+                    android:layout_alignParentBottom="false"
+                    android:layout_centerHorizontal="true"
+                    android:layout_below="@+id/activityAddressText"
+                    android:layout_marginTop="5dp"
+                    android:textAllCaps="false"
+                    android:onClick="pickMyLocationClick"
+                    android:layout_alignLeft="@+id/activityAddressText" />
+            </RelativeLayout>
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:id="@+id/keywords_id"
-                android:layout_below="@+id/activity_name_id"
+                android:layout_below="@+id/address_id"
                 android:layout_marginTop="5dp">
 
                 <EditText
@@ -213,9 +265,6 @@
                     android:id="@+id/textView57"
                     android:textColor="#fff"
                     android:gravity="center_vertical"
-                    android:layout_below="@+id/keywords_id"
-                    android:layout_alignLeft="@+id/personMessageText"
-                    android:layout_alignStart="@+id/textView54"
                     android:textSize="11sp"
                     android:layout_marginLeft="20dp" />
             </RelativeLayout>
@@ -273,9 +322,6 @@
                     android:id="@+id/textView58"
                     android:textColor="#fff"
                     android:gravity="center_vertical"
-                    android:layout_below="@+id/keywords_id"
-                    android:layout_alignLeft="@+id/textView57"
-                    android:layout_alignStart="@+id/textView57"
                     android:textSize="11sp"
                     android:layout_marginLeft="20dp" />
             </RelativeLayout>
@@ -314,9 +360,6 @@
                     android:id="@+id/textView59"
                     android:textColor="#fff"
                     android:gravity="center_vertical"
-                    android:layout_below="@+id/duration_id"
-                    android:layout_alignLeft="@+id/textView58"
-                    android:layout_alignStart="@+id/textView58"
                     android:textSize="11sp"
                     android:layout_marginLeft="20dp" />
             </RelativeLayout>
@@ -341,13 +384,13 @@
                     android:textColorHint="#fff"
                     android:inputType="textPersonName"
                     android:textAllCaps="false"
-                    android:layout_below="@+id/time_selection_id"
                     android:text="@string/yes"
                     android:gravity="left|center_vertical"
                     android:paddingLeft="10dp"
                     android:paddingRight="4dp"
                     android:layout_toRightOf="@+id/textView60"
-                    android:layout_marginLeft="10dp" />
+                    android:layout_marginLeft="10dp"
+                    android:onClick="pickupOptionClick"/>
 
                 <TextView
                     android:layout_width="120dp"
@@ -357,7 +400,6 @@
                     android:id="@+id/textView60"
                     android:textColor="#fff"
                     android:gravity="center_vertical"
-                    android:layout_alignStart="@+id/textView59"
                     android:textSize="11sp"
                     android:layout_marginLeft="20dp" />
             </RelativeLayout>
@@ -404,7 +446,6 @@
                     android:textColor="#fff"
                     android:gravity="center_vertical"
                     android:textSize="11sp"
-                    android:layout_alignStart="@+id/textView60"
                     android:layout_marginLeft="20dp" />
             </RelativeLayout>
 
@@ -442,7 +483,6 @@
                     android:gravity="center_vertical"
                     android:textSize="11sp"
                     android:layout_alignTop="@+id/priceText"
-                    android:layout_alignStart="@+id/textView65"
                     android:layout_marginLeft="20dp" />
             </RelativeLayout>
 
@@ -479,7 +519,6 @@
                     android:textColor="#fff"
                     android:gravity="center_vertical"
                     android:textSize="11sp"
-                    android:layout_alignStart="@+id/textView66"
                     android:layout_marginTop="20dp"
                     android:layout_marginLeft="20dp" />
             </RelativeLayout>
@@ -500,7 +539,6 @@
                     android:textColor="#fff"
                     android:gravity="center_vertical"
                     android:textSize="11sp"
-                    android:layout_alignStart="@+id/textView65"
                     android:layout_marginLeft="20dp" />
 
                 <Button
@@ -541,7 +579,6 @@
                     android:textColor="#fff"
                     android:gravity="center_vertical"
                     android:textSize="11sp"
-                    android:layout_alignStart="@+id/textView65"
                     android:layout_marginLeft="20dp" />
 
                 <Button
@@ -594,7 +631,8 @@
                     android:layout_toEndOf="@+id/textView68"
                     android:layout_marginRight="20dp"
                     android:layout_toRightOf="@+id/textView68"
-                    android:layout_marginLeft="10dp" />
+                    android:layout_marginLeft="10dp"
+                    android:onClick="postingOptionClick"/>
 
                 <TextView
                     android:layout_width="120dp"
@@ -605,7 +643,6 @@
                     android:textColor="#fff"
                     android:gravity="center_vertical"
                     android:textSize="11sp"
-                    android:layout_alignStart="@+id/textView60"
                     android:layout_marginLeft="20dp" />
             </RelativeLayout>
 
@@ -698,7 +735,7 @@
                 android:textColor="@drawable/white_text_color"
                 android:textSize="12sp"
                 android:textAllCaps="false"
-                android:onClick="rememberMe"
+                android:onClick="postActivity"
                 android:drawableRight="@drawable/next_arrow"
                 android:layout_below="@+id/terms_con_id"
                 android:layout_centerHorizontal="true"

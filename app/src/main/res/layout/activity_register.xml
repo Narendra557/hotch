@@ -82,7 +82,7 @@
                 android:layout_height="match_parent"
                 android:id="@+id/personal_info_layout"
                 android:paddingBottom="20dp"
-                android:visibility="visible">
+                android:visibility="gone">
 
                 <LinearLayout
                     android:orientation="vertical"
@@ -137,8 +137,6 @@
                             android:text="@string/first_name"
                             android:id="@+id/textView38"
                             android:layout_alignTop="@+id/email_text"
-                            android:layout_alignLeft="@+id/imageView2"
-                            android:layout_alignStart="@+id/imageView2"
                             android:textColor="#fff"
                             android:gravity="center_vertical"
                             android:textSize="11sp"
@@ -176,9 +174,6 @@
                             android:id="@+id/textView54"
                             android:textColor="#fff"
                             android:gravity="center_vertical"
-                            android:layout_below="@+id/textView38"
-                            android:layout_alignLeft="@+id/textView38"
-                            android:layout_alignStart="@+id/textView38"
                             android:textSize="11sp"
                             android:layout_marginLeft="20dp" />
 
@@ -232,9 +227,6 @@
                             android:id="@+id/textView57"
                             android:textColor="#fff"
                             android:gravity="center_vertical"
-                            android:layout_below="@+id/textView54"
-                            android:layout_alignLeft="@+id/textView54"
-                            android:layout_alignStart="@+id/textView54"
                             android:textSize="11sp"
                             android:layout_marginLeft="20dp" />
                     </RelativeLayout>
@@ -270,9 +262,6 @@
                             android:id="@+id/textView58"
                             android:textColor="#fff"
                             android:gravity="center_vertical"
-                            android:layout_below="@+id/textView57"
-                            android:layout_alignLeft="@+id/textView57"
-                            android:layout_alignStart="@+id/textView57"
                             android:textSize="11sp"
                             android:layout_marginLeft="20dp" />
                     </RelativeLayout>
@@ -290,9 +279,6 @@
                             android:id="@+id/textView59"
                             android:textColor="#fff"
                             android:gravity="center_vertical"
-                            android:layout_below="@+id/textView58"
-                            android:layout_alignLeft="@+id/textView58"
-                            android:layout_alignStart="@+id/textView58"
                             android:textSize="11sp"
                             android:layout_marginLeft="20dp" />
 
@@ -351,9 +337,6 @@
                             android:id="@+id/textView60"
                             android:textColor="#fff"
                             android:gravity="center_vertical"
-                            android:layout_below="@+id/textView59"
-                            android:layout_alignLeft="@+id/textView59"
-                            android:layout_alignStart="@+id/textView59"
                             android:textSize="11sp"
                             android:layout_marginLeft="20dp" />
                     </RelativeLayout>
@@ -370,9 +353,6 @@
                             android:id="@+id/textView61"
                             android:textColor="#fff"
                             android:gravity="center_vertical"
-                            android:layout_below="@+id/textView60"
-                            android:layout_alignLeft="@+id/textView60"
-                            android:layout_alignStart="@+id/textView60"
                             android:text="@string/location"
                             android:textSize="11sp"
                             android:layout_marginLeft="20dp"
@@ -443,9 +423,6 @@
                             android:textColor="#fff"
                             android:gravity="center_vertical"
                             android:textSize="11sp"
-                            android:layout_below="@+id/textView62"
-                            android:layout_alignLeft="@+id/textView62"
-                            android:layout_alignStart="@+id/textView62"
                             android:layout_marginLeft="20dp" />
                     </RelativeLayout>
 
@@ -463,9 +440,6 @@
                             android:textColor="#fff"
                             android:gravity="center_vertical"
                             android:textSize="11sp"
-                            android:layout_below="@+id/textView63"
-                            android:layout_alignLeft="@+id/textView63"
-                            android:layout_alignStart="@+id/textView63"
                             android:layout_marginLeft="20dp" />
 
                         <EditText
@@ -687,7 +661,6 @@
                             android:layout_marginLeft="20dp"
                             android:layout_marginRight="20dp"
                             android:layout_alignParentStart="true"
-                            android:layout_below="@+id/textView71"
                             android:layout_alignParentLeft="true"
                             android:onClick="gymButtonClick"/>
                     </RelativeLayout>
@@ -720,7 +693,6 @@
                             android:layout_marginLeft="20dp"
                             android:layout_marginRight="20dp"
                             android:layout_alignParentStart="true"
-                            android:layout_below="@+id/textView71"
                             android:layout_alignParentLeft="true"
                             android:onClick="artsButtonClick"/>
                     </RelativeLayout>
@@ -753,7 +725,6 @@
                             android:layout_marginLeft="20dp"
                             android:layout_marginRight="20dp"
                             android:layout_alignParentStart="true"
-                            android:layout_below="@+id/textView71"
                             android:layout_alignParentLeft="true"
                             android:onClick="relaxationButtonClick"/>
                     </RelativeLayout>
@@ -786,7 +757,6 @@
                             android:layout_marginLeft="20dp"
                             android:layout_marginRight="20dp"
                             android:layout_alignParentStart="true"
-                            android:layout_below="@+id/textView71"
                             android:layout_alignParentLeft="true"
                             android:onClick="childrenButtonClick"/>
                     </RelativeLayout>
@@ -946,7 +916,6 @@
                 android:id="@+id/link_your_accounts_layout"
                 android:layout_alignParentEnd="false"
                 android:layout_alignParentBottom="false"
-                android:visibility="gone"
                 android:paddingBottom="20dp">
 
                 <TextView
@@ -954,10 +923,10 @@
                     android:layout_height="30dp"
                     android:inputType="textMultiLine"
                     android:ems="10"
-                    android:textColor="#fff"
+                    android:textColor="@color/white_color"
                     android:id="@+id/textView83"
                     android:text="@string/link_your_account"
-                    android:textColorHint="#fff"
+                    android:textColorHint="@color/white_color"
                     android:textSize="14sp"
                     android:layout_alignParentTop="true"
                     android:layout_alignParentLeft="false"
@@ -968,34 +937,61 @@
                     android:gravity="center"
                     android:textStyle="bold" />
 
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="30dp"
+                    android:inputType="textMultiLine"
+                    android:ems="10"
+                    android:textColor="@color/white_color"
+                    android:id="@+id/textView13"
+                    android:text="@string/social_media"
+                    android:textColorHint="@color/white_color"
+                    android:textSize="14sp"
+                    android:layout_alignParentTop="false"
+                    android:layout_alignParentLeft="false"
+                    android:layout_alignParentStart="true"
+                    android:layout_marginRight="20dp"
+                    android:layout_marginLeft="20dp"
+                    android:gravity="left|center"
+                    android:textStyle="bold"
+                    android:layout_below="@+id/textView83" />
+
+                <com.facebook.login.widget.LoginButton
+                    android:id="@+id/login_button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:visibility="gone" />
+
                 <LinearLayout
                     android:orientation="horizontal"
                     android:layout_width="match_parent"
                     android:layout_height="30dp"
                     android:layout_weight="4"
-                    android:layout_below="@+id/textView83"
+                    android:layout_below="@+id/textView13"
                     android:weightSum="4"
                     android:id="@+id/lay_1"
-                    android:layout_marginTop="30dp">
+                    android:layout_marginTop="10dp">
 
                     <Button
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:id="@+id/button"
+                        android:id="@+id/google_plus_button"
                         style="?android:borderlessButtonStyle"
                         android:layout_weight="1"
                         android:layout_marginLeft="5dp"
                         android:layout_marginRight="5dp"
-                        android:background="@drawable/paypal" />
+                        android:background="@drawable/google"
+                        android:onClick="googlePlusClick" />
 
                     <Button
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:id="@+id/button2"
+                        android:id="@+id/facebook_button"
                         android:layout_weight="1"
                         style="?android:borderlessButtonStyle"
                         android:layout_marginRight="5dp"
-                        android:background="@drawable/facebook" />
+                        android:background="@drawable/facebook"
+                        android:onClick="facebookClick" />
 
                     <Button
                         android:layout_width="match_parent"
@@ -1004,7 +1000,8 @@
                         android:layout_weight="1"
                         style="?android:borderlessButtonStyle"
                         android:layout_marginRight="5dp"
-                        android:background="@drawable/twitter" />
+                        android:background="@drawable/twitter"
+                        android:onClick="twitterClick" />
 
                     <Button
                         android:layout_width="match_parent"
@@ -1013,7 +1010,8 @@
                         android:layout_weight="1"
                         style="?android:borderlessButtonStyle"
                         android:layout_marginRight="5dp"
-                        android:background="@drawable/linkedin" />
+                        android:background="@drawable/linkedin"
+                        android:onClick="linkedInClick" />
                 </LinearLayout>
 
                 <LinearLayout
@@ -1023,8 +1021,75 @@
                     android:layout_weight="4"
                     android:layout_below="@+id/lay_1"
                     android:weightSum="4"
+                    android:id="@+id/linearLayout6"
+                    android:layout_marginTop="10dp" >
+
+                    <Button
+                        style="?android:borderlessButtonStyle"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:id="@+id/button18"
+                        android:layout_weight="1"
+                        android:layout_marginLeft="5dp"
+                        android:layout_marginRight="5dp"
+                        android:background="@drawable/instagram"
+                        android:onClick="instagramClick" />
+
+                    <Button
+                        style="?android:borderlessButtonStyle"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:id="@+id/button19"
+                        android:layout_weight="1"
+                        android:layout_marginRight="5dp"
+                        android:background="@color/transperent_color" />
+
+                    <Button
+                        style="?android:borderlessButtonStyle"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:id="@+id/button20"
+                        android:layout_weight="1"
+                        android:layout_marginRight="5dp"
+                        android:background="@color/transperent_color" />
+
+                    <Button
+                        style="?android:borderlessButtonStyle"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:id="@+id/button21"
+                        android:layout_weight="1"
+                        android:layout_marginRight="5dp"
+                        android:background="@color/transperent_color" />
+                </LinearLayout>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="30dp"
+                    android:inputType="textMultiLine"
+                    android:ems="10"
+                    android:textColor="@color/white_color"
+                    android:id="@+id/textView15"
+                    android:text="@string/payment_gateway"
+                    android:textColorHint="@color/white_color"
+                    android:textSize="14sp"
+                    android:gravity="left|center"
+                    android:textStyle="bold"
+                    android:layout_below="@+id/linearLayout6"
+                    android:layout_alignLeft="@+id/textView13"
+                    android:layout_alignStart="@+id/textView13"
+                    android:layout_marginTop="20dp" />
+
+                <LinearLayout
+                    android:orientation="horizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="30dp"
+                    android:layout_weight="4"
+                    android:layout_below="@+id/textView15"
+                    android:weightSum="4"
                     android:id="@+id/linearLayout9"
-                    android:layout_marginTop="30dp">
+                    android:layout_marginTop="10dp"
+                    android:layout_marginBottom="20dp">
 
                     <Button
                         android:layout_width="match_parent"
@@ -1034,16 +1099,8 @@
                         style="?android:borderlessButtonStyle"
                         android:layout_marginLeft="5dp"
                         android:layout_marginRight="5dp"
-                        android:background="@drawable/google" />
-
-                    <Button
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:id="@+id/button10"
-                        android:layout_weight="1"
-                        style="?android:borderlessButtonStyle"
-                        android:layout_marginRight="5dp"
-                        android:background="@drawable/instagram" />
+                        android:background="@drawable/paypal"
+                        android:onClick="paypalClick" />
 
                     <Button
                         android:layout_width="match_parent"
@@ -1052,7 +1109,17 @@
                         android:layout_weight="1"
                         style="?android:borderlessButtonStyle"
                         android:layout_marginRight="5dp"
-                        android:background="@drawable/credit_card" />
+                        android:background="@drawable/credit_card"
+                        android:onClick="creditCardClick" />
+
+                    <Button
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:id="@+id/button10"
+                        android:layout_weight="1"
+                        style="?android:borderlessButtonStyle"
+                        android:layout_marginRight="5dp"
+                        android:background="@color/transperent_color" />
 
                     <Button
                         android:layout_width="match_parent"
@@ -1074,7 +1141,7 @@
                     android:textColor="@drawable/white_text_color"
                     android:textSize="12sp"
                     android:textAllCaps="false"
-                    android:onClick="backPage3"
+                    android:onClick="backPage1"
                     android:drawableLeft="@drawable/back_double_arrow"
                     android:paddingRight="13dp"
                     android:nestedScrollingEnabled="false"
@@ -1082,7 +1149,7 @@
                     android:layout_centerHorizontal="true"
                     android:layout_alignParentStart="true"
                     android:layout_marginLeft="20dp"
-                    android:layout_marginTop="100dp"
+                    android:layout_marginTop="40dp"
                     android:layout_marginBottom="20dp"
                     android:layout_alignParentLeft="true" />
 
@@ -1096,14 +1163,14 @@
                     android:textColor="@drawable/white_text_color"
                     android:textSize="12sp"
                     android:textAllCaps="false"
-                    android:onClick="nextPage3"
+                    android:onClick="nextPage2"
                     android:drawableRight="@drawable/next_arrow"
                     android:paddingLeft="13dp"
                     android:layout_alignParentEnd="true"
                     android:layout_below="@+id/linearLayout9"
                     android:layout_centerHorizontal="true"
                     android:layout_marginRight="20dp"
-                    android:layout_marginTop="100dp"
+                    android:layout_marginTop="40dp"
                     android:layout_marginBottom="20dp"
                     android:layout_alignParentRight="true" />
 
