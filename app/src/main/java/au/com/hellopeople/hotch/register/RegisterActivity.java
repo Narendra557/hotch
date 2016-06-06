@@ -57,6 +57,11 @@ import com.google.android.gms.plus.Plus;
 import com.google.android.gms.plus.PlusShare;
 import com.google.android.gms.plus.model.people.Person;
 import com.google.android.gms.plus.model.people.PersonBuffer;
+import com.twitter.sdk.android.core.Callback;
+import com.twitter.sdk.android.core.Result;
+import com.twitter.sdk.android.core.TwitterException;
+import com.twitter.sdk.android.core.TwitterSession;
+import com.twitter.sdk.android.core.identity.TwitterLoginButton;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -107,13 +112,15 @@ public class RegisterActivity extends AppCompatActivity implements RegisterCompl
     // Google Play services
     private ConnectionResult mConnectionResult;
 
+    private TwitterLoginButton twitterloginButton;
 
     String firstName, lastName, personType, email, userName, password, message, dob, gender, rePassword, emailPattern;
     EditText etFirstName, etLastName, etEmail, etPassword, etRePassword, etUserName, etMessage;
     Button  btRegister, btProfilePicUploader, btPostNow, btLocAllow, btDateOfBirth, btDob, btGender, btCategories, btSporting, btGym, btArts, btRelaxation, btChildren, btPossibleIssues, btLanguages,
-            googlePlusButton, facebookLoginButton;
+            googlePlusButton, facebookLoginButton, twitterButton;
     LoginButton facebookButton;
     private int FACEBOOK_REQUEST_CODE = 15;
+    private int TWITTER_REQUEST_CODE = 80;
 
 
     ImageView ivProfilePic;
@@ -152,6 +159,9 @@ public class RegisterActivity extends AppCompatActivity implements RegisterCompl
         FacebookSdk.sdkInitialize(getApplicationContext());
         AppEventsLogger.activateApp(this);
         setContentView(R.layout.activity_register);
+
+        twitterloginButton = (TwitterLoginButton)findViewById(R.id.twitter_login_button);
+        twitterloginButton.setCallback(new LoginHandler());
 
         callbackManager = CallbackManager.Factory.create();
 
@@ -200,6 +210,8 @@ public class RegisterActivity extends AppCompatActivity implements RegisterCompl
         googlePlusButton = (Button) findViewById(R.id.google_plus_button);
         facebookButton = (LoginButton) findViewById(R.id.login_button);
         facebookLoginButton = (Button) findViewById(R.id.facebook_button);
+        twitterButton = (Button) findViewById(R.id.twitter_button);
+
         List < String > permissionNeeds = Arrays.asList("user_photos", "email",
                 "user_birthday", "public_profile", "AccessToken");
         facebookButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
@@ -243,6 +255,7 @@ public class RegisterActivity extends AppCompatActivity implements RegisterCompl
                                 ed.putString("Hotch_facebook_name", fbname);
                                 ed.putString("Hotch_facebook_email", fbemail);
                                 ed.commit();
+                                facebookLoginButton.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.remember_me_select, 0);
 
                             } catch (JSONException e) {
                                 e.printStackTrace();
@@ -272,6 +285,7 @@ public class RegisterActivity extends AppCompatActivity implements RegisterCompl
                 .getDefaultSharedPreferences(this);
         String googleemail = prefs.getString("Hotch_google_plus_email", "No");
         String facebookname = prefs.getString("Hotch_facebook_name", "No");
+        String twittername = prefs.getString("Hotch_twitter_name", "No");
 
         if (!googleemail.equalsIgnoreCase("No")) {
             googlePlusButton.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.remember_me_select, 0);
@@ -282,6 +296,11 @@ public class RegisterActivity extends AppCompatActivity implements RegisterCompl
             facebookLoginButton.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.remember_me_select, 0);
         } else  {
             facebookLoginButton.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
+        }
+        if (!twittername.equalsIgnoreCase("No")) {
+            twitterButton.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.remember_me_select, 0);
+        } else  {
+            twitterButton.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
         }
     }
 
@@ -456,10 +475,66 @@ public class RegisterActivity extends AppCompatActivity implements RegisterCompl
         SharedPreferences.Editor ed = prefs.edit();
         ed.putString("Hotch_facebook_name", "No");
         ed.commit();
+        facebookLoginButton.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
+    }
+
+    public void twitterSignOut() {
+        SharedPreferences prefs = PreferenceManager
+                .getDefaultSharedPreferences(RegisterActivity.this);
+        SharedPreferences.Editor ed = prefs.edit();
+        ed.putString("Hotch_twitter_name", "No");
+        ed.commit();
+        twitterButton.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
     }
 
     public void twitterClick(View v){
+        android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(
+                RegisterActivity.this);
+        builder.setTitle("Twitter");
+        String[] optionsList = { "Sign In", "Sign Out", "Share" };
+        builder.setItems(optionsList,
+                new DialogInterface.OnClickListener() {
 
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        // TODO Auto-generated method stub
+
+                        if (which == 0) {
+                            twitterloginButton.performClick();
+                        } else if (which == 1) {
+                            twitterSignOut();
+                        } else if (which == 2) {
+
+                        }
+                        dialog.cancel();
+                    }
+
+                });
+        builder.show();
+    }
+
+    private class LoginHandler extends Callback<TwitterSession> {
+        @Override
+        public void success(Result<TwitterSession> twitterSessionResult) {
+            String output = "Status: " +
+                    "Your login was successful " +
+                    twitterSessionResult.data.getUserName() +
+                    "\nAuth Token Received: " +
+                    twitterSessionResult.data.getAuthToken().token;
+
+            System.out.println("twitter - "+output);
+            SharedPreferences prefs = PreferenceManager
+                    .getDefaultSharedPreferences(RegisterActivity.this);
+            SharedPreferences.Editor ed = prefs.edit();
+            ed.putString("Hotch_twitter_name", twitterSessionResult.data.getUserName());
+            ed.commit();
+            twitterButton.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.remember_me_select, 0);
+        }
+
+        @Override
+        public void failure(TwitterException e) {
+
+        }
     }
 
     public void linkedInClick(View v){
@@ -789,6 +864,9 @@ public class RegisterActivity extends AppCompatActivity implements RegisterCompl
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+
+        twitterloginButton.onActivityResult(requestCode, resultCode, data);
+
         callbackManager.onActivityResult(requestCode, resultCode, data);
 //        if (requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK && data != null && data.getData() != null) {
 //            Uri filePath = data.getData();
@@ -860,12 +938,12 @@ public class RegisterActivity extends AppCompatActivity implements RegisterCompl
     }
 
     public void locationAllowClick(View view){
-        if (btLocAllow.getText().toString().equals("Allow")){
-            btLocAllow.setText("  Disallow");
-            btLocAllow.setCompoundDrawablesWithIntrinsicBounds(R.drawable.remember_me_deselect_grey, 0, 0, 0);
+        if (btLocAllow.getText().toString().equalsIgnoreCase("Allow")){
+            btLocAllow.setText(R.string.disallow);
+            btLocAllow.setCompoundDrawablesWithIntrinsicBounds(R.drawable.remember_me_deselect, 0, 0, 0);
         } else {
-            btLocAllow.setText("Allow");
-            btLocAllow.setCompoundDrawablesWithIntrinsicBounds(R.drawable.remember_me_select_grey, 0, 0, 0);
+            btLocAllow.setText(R.string.allow);
+            btLocAllow.setCompoundDrawablesWithIntrinsicBounds(R.drawable.remember_me_select, 0, 0, 0);
         }
     }
 

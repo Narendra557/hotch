@@ -32,6 +32,9 @@
         android:theme="@style/AppTheme">
         <meta-data android:name="com.facebook.sdk.ApplicationId" android:value="@string/facebook_app_id"/>
         <meta-data
+            android:name="io.fabric.ApiKey"
+            android:value="d3985075c789a8a68000e894987f6263c4a15f56" />
+        <meta-data
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
         <meta-data

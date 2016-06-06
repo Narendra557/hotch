@@ -81,8 +81,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:id="@+id/personal_info_layout"
-                android:paddingBottom="20dp"
-                android:visibility="gone">
+                android:paddingBottom="20dp">
 
                 <LinearLayout
                     android:orientation="vertical"
@@ -916,7 +915,8 @@
                 android:id="@+id/link_your_accounts_layout"
                 android:layout_alignParentEnd="false"
                 android:layout_alignParentBottom="false"
-                android:paddingBottom="20dp">
+                android:paddingBottom="20dp"
+                android:visibility="gone">
 
                 <TextView
                     android:layout_width="match_parent"
@@ -961,7 +961,12 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:visibility="gone" />
-
+                <com.twitter.sdk.android.core.identity.TwitterLoginButton
+                    android:id="@+id/twitter_login_button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:visibility="gone"/>
                 <LinearLayout
                     android:orientation="horizontal"
                     android:layout_width="match_parent"
@@ -996,7 +1001,7 @@
                     <Button
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:id="@+id/button3"
+                        android:id="@+id/twitter_button"
                         android:layout_weight="1"
                         style="?android:borderlessButtonStyle"
                         android:layout_marginRight="5dp"
@@ -1006,7 +1011,7 @@
                     <Button
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:id="@+id/button4"
+                        android:id="@+id/linkedin_button"
                         android:layout_weight="1"
                         style="?android:borderlessButtonStyle"
                         android:layout_marginRight="5dp"
@@ -1182,8 +1187,8 @@
                 android:id="@+id/selling_or_sharing_dis_layout"
                 android:layout_alignParentEnd="false"
                 android:layout_alignParentBottom="false"
-                android:visibility="gone"
-                android:paddingBottom="20dp">
+                android:paddingBottom="20dp"
+                android:visibility="gone">
 
                 <TextView
                     android:layout_width="match_parent"

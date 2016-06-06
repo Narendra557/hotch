@@ -7,6 +7,9 @@ import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
+import com.twitter.sdk.android.Twitter;
+import com.twitter.sdk.android.core.TwitterAuthConfig;
+import io.fabric.sdk.android.Fabric;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -16,12 +19,17 @@ import au.com.hellopeople.hotch.login.LoginActivity;
 import au.com.hellopeople.hotch.util.SmartImageView;
 import au.com.hellopeople.hotch.util.WebImage;
 
-public class SplashActivity extends AppCompatActivity {
 
+public class SplashActivity extends AppCompatActivity {
+    // Note: Your consumer key and secret should be obfuscated in your source code before shipping.
+    private static final String TWITTER_KEY = "4SZLC0b9ecT5meCOsHtw7GoJh";
+    private static final String TWITTER_SECRET = "HDXg8veWseSFFQH99W0UCzNgn0gKoCX8Nsau8RLRC7dthROHj7";
     private static int SPLASH_TIME_OUT = 3000;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        TwitterAuthConfig authConfig = new TwitterAuthConfig(TWITTER_KEY, TWITTER_SECRET);
+        Fabric.with(this, new Twitter(authConfig));
         setContentView(R.layout.activity_splash);
 
         SmartImageView splashImage = (SmartImageView) findViewById(R.id.imageView);
