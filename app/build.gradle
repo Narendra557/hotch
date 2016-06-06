@@ -1,13 +1,16 @@
 apply plugin: 'com.android.application'
 
 apply plugin: 'com.google.gms.google-services'
+repositories {
+    mavenCentral()
+}
 android {
     compileSdkVersion 23
     buildToolsVersion "23.0.2"
 
     defaultConfig {
         applicationId "au.com.hellopeople.hotch"
-        minSdkVersion 12
+        minSdkVersion 15
         targetSdkVersion 23
         versionCode 1
         versionName "1.0"
@@ -40,4 +43,5 @@ dependencies {
     compile 'com.google.android.gms:play-services-auth:8.3.0'
     compile 'com.google.android.gms:play-services-identity:8.3.0'
     compile 'com.google.android.gms:play-services-plus:8.3.0'
+    compile 'com.facebook.android:facebook-android-sdk:4.8.1'
 }

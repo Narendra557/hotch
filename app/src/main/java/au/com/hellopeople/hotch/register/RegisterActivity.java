@@ -35,6 +35,15 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.facebook.CallbackManager;
+import com.facebook.FacebookCallback;
+import com.facebook.FacebookException;
+import com.facebook.FacebookSdk;
+import com.facebook.GraphRequest;
+import com.facebook.GraphResponse;
+import com.facebook.appevents.AppEventsLogger;
+import com.facebook.login.LoginResult;
+import com.facebook.login.widget.LoginButton;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.common.GooglePlayServicesUtil;
@@ -61,6 +70,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
@@ -98,21 +108,14 @@ public class RegisterActivity extends AppCompatActivity implements RegisterCompl
     private ConnectionResult mConnectionResult;
 
 
-    GoogleApiClient google_api_client;
-    GoogleApiAvailability google_api_availability;
-    SignInButton signIn_btn;
-    private static final int SIGN_IN_CODE = 0;
-    private static final int PROFILE_PIC_SIZE = 120;
-    private ConnectionResult connection_result;
-    private boolean is_intent_inprogress;
-    private boolean is_signInBtn_clicked;
-    private int request_code;
-    ProgressDialog progress_dialog;
-
     String firstName, lastName, personType, email, userName, password, message, dob, gender, rePassword, emailPattern;
     EditText etFirstName, etLastName, etEmail, etPassword, etRePassword, etUserName, etMessage;
     Button  btRegister, btProfilePicUploader, btPostNow, btLocAllow, btDateOfBirth, btDob, btGender, btCategories, btSporting, btGym, btArts, btRelaxation, btChildren, btPossibleIssues, btLanguages,
-            googlePlusButton;
+            googlePlusButton, facebookLoginButton;
+    LoginButton facebookButton;
+    private int FACEBOOK_REQUEST_CODE = 15;
+
+
     ImageView ivProfilePic;
     RelativeLayout personalInfoLayout, aboutYourSelfLayout, linkYourAccLayout, sellingOrSharingLayout;
     public int personTypeId;
@@ -140,10 +143,18 @@ public class RegisterActivity extends AppCompatActivity implements RegisterCompl
     String[] sportingInterestsIds, gymInterestsIds, artsInterestsIds, relaxationInterestsIds, childrenInterestsIds;
     String strSelectedCatIds="{}", strSelectedSportingIds="{}", strSelectedGymIds="{}", strSelectedArtsIds="{}", strSelectedRelaxationIds="{}", strSelectedChildrenIds="{}", strSelectedConcernsIds="{}", strSelectedLanguagesIds="{}";
 
+
+    private CallbackManager callbackManager;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        FacebookSdk.sdkInitialize(getApplicationContext());
+        AppEventsLogger.activateApp(this);
         setContentView(R.layout.activity_register);
+
+        callbackManager = CallbackManager.Factory.create();
+
         Bundle extras = getIntent().getExtras();
         personTypeId = extras.getInt("person_type");
 
@@ -187,16 +198,90 @@ public class RegisterActivity extends AppCompatActivity implements RegisterCompl
         mGoogleApiClient = buildGoogleAPIClient();
 
         googlePlusButton = (Button) findViewById(R.id.google_plus_button);
+        facebookButton = (LoginButton) findViewById(R.id.login_button);
+        facebookLoginButton = (Button) findViewById(R.id.facebook_button);
+        List < String > permissionNeeds = Arrays.asList("user_photos", "email",
+                "user_birthday", "public_profile", "AccessToken");
+        facebookButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
+            @Override
+            public void onSuccess(LoginResult loginResult) {
+                System.out.println("onSuccess");
 
+                String accessToken = loginResult.getAccessToken()
+                        .getToken();
+                Log.i("accessToken", accessToken);
+
+                GraphRequest request = GraphRequest.newMeRequest(
+                        loginResult.getAccessToken(),
+                        new GraphRequest.GraphJSONObjectCallback() {@Override
+                        public void onCompleted(JSONObject object,
+                                                GraphResponse response) {
+
+                            Log.i("LoginActivity",
+                                    response.toString());
+                            try {
+                                String id = object.getString("id");
+                                try {
+                                    URL fbprofile_pic = new URL(
+                                            "http://graph.facebook.com/" + id + "/picture?type=large");
+                                    Log.i("profile_pic",
+                                            fbprofile_pic + "");
+
+                                } catch (MalformedURLException e) {
+                                    e.printStackTrace();
+                                }
+                                String fbname = object.getString("name");
+                                String fbemail = object.getString("email");
+                                String fbgender = object.getString("gender");
+                                String fbbirthday = object.getString("birthday");
+                                System.out.println("name - "+fbname);
+                                System.out.println("email - "+fbemail);
+
+                                SharedPreferences prefs = PreferenceManager
+                                        .getDefaultSharedPreferences(RegisterActivity.this);
+                                SharedPreferences.Editor ed = prefs.edit();
+                                ed.putString("Hotch_facebook_name", fbname);
+                                ed.putString("Hotch_facebook_email", fbemail);
+                                ed.commit();
+
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                        });
+                Bundle parameters = new Bundle();
+                parameters.putString("fields",
+                        "id,name,email,gender, birthday");
+                request.setParameters(parameters);
+                request.executeAsync();
+            }
+
+            @Override
+            public void onCancel() {
+                System.out.println("onCancel");
+            }
+
+            @Override
+            public void onError(FacebookException exception) {
+                System.out.println("onError");
+                Log.v("LoginActivity", exception.getCause().toString());
+            }
+        });
 
         SharedPreferences prefs = PreferenceManager
                 .getDefaultSharedPreferences(this);
         String googleemail = prefs.getString("Hotch_google_plus_email", "No");
+        String facebookname = prefs.getString("Hotch_facebook_name", "No");
 
         if (!googleemail.equalsIgnoreCase("No")) {
             googlePlusButton.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.remember_me_select, 0);
         } else  {
             googlePlusButton.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
+        }
+        if (!facebookname.equalsIgnoreCase("No")) {
+            facebookLoginButton.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.remember_me_select, 0);
+        } else  {
+            facebookLoginButton.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
         }
     }
 
@@ -340,7 +425,37 @@ public class RegisterActivity extends AppCompatActivity implements RegisterCompl
     }
 
     public void facebookClick(View v){
+        android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(
+                RegisterActivity.this);
+        builder.setTitle("Facebook");
+        String[] optionsList = { "Sign In", "Sign Out", "Share" };
+        builder.setItems(optionsList,
+                new DialogInterface.OnClickListener() {
 
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        // TODO Auto-generated method stub
+
+                        if (which == 0) {
+                            facebookButton.performClick();
+                        } else if (which == 1) {
+                            facebookSignOut();
+                        } else if (which == 2) {
+
+                        }
+                        dialog.cancel();
+                    }
+
+                });
+        builder.show();
+    }
+
+    public void facebookSignOut() {
+        SharedPreferences prefs = PreferenceManager
+                .getDefaultSharedPreferences(RegisterActivity.this);
+        SharedPreferences.Editor ed = prefs.edit();
+        ed.putString("Hotch_facebook_name", "No");
+        ed.commit();
     }
 
     public void twitterClick(View v){
@@ -674,6 +789,7 @@ public class RegisterActivity extends AppCompatActivity implements RegisterCompl
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+        callbackManager.onActivityResult(requestCode, resultCode, data);
 //        if (requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK && data != null && data.getData() != null) {
 //            Uri filePath = data.getData();
 //            try {
@@ -998,8 +1114,6 @@ public class RegisterActivity extends AppCompatActivity implements RegisterCompl
 
             processUserInfoAndUpdateUI();
         }
-
-//        processUIUpdate(true);
     }
 
     @Override
@@ -1081,6 +1195,7 @@ public class RegisterActivity extends AppCompatActivity implements RegisterCompl
 //                new UpdateProfilePicTask(userProfilePic)
 //                        .execute(userProfilePicUrl);
 //            }
+
 
         }
     }
