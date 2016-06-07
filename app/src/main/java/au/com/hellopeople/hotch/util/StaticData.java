@@ -15,7 +15,11 @@ public class StaticData {
     public static double currentUserLocationLongitude = 0.0;
 
     public static int[][] arrInterests = null;
+    public static String[] arrActivityPicsNames = null;
+    public static String[] arrActivityPicsPaths = null;
 
+    public static String[] arrActivityVideoNames = null;
+    public static String[] arrActivityVideoPaths = null;
 
 
     //

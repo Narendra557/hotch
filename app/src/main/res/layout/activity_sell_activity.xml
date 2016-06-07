@@ -305,7 +305,7 @@
                     android:textSize="11sp"
                     android:background="@drawable/dark_white_round_corners"
                     android:textColorHint="#fff"
-                    android:inputType="textEmailAddress"
+                    android:inputType="textEmailAddress|number"
                     android:layout_alignTop="@+id/durationTypeButton"
                     android:layout_alignParentRight="true"
                     android:layout_alignParentEnd="true"
@@ -560,7 +560,8 @@
                     android:text="@string/pictures"
                     android:layout_marginLeft="10dp"
                     android:layout_marginRight="20dp"
-                    android:layout_toRightOf="@+id/textView81" />
+                    android:layout_toRightOf="@+id/textView81"
+                    android:onClick="picturesButtonClick"/>
             </RelativeLayout>
 
             <RelativeLayout
@@ -599,7 +600,8 @@
                     android:text="@string/videos"
                     android:layout_toRightOf="@+id/textView82"
                     android:layout_marginRight="20dp"
-                    android:layout_alignParentEnd="true" />
+                    android:layout_alignParentEnd="true"
+                    android:onClick="videoButtonClick" />
             </RelativeLayout>
 
             <RelativeLayout
