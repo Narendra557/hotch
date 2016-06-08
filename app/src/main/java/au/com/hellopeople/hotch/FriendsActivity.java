@@ -11,6 +11,8 @@ import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.ListView;
 
+import au.com.hellopeople.hotch.Activity.SellActivity;
+
 public class FriendsActivity extends AppCompatActivity implements AdapterView.OnItemClickListener {
 
     @Override

@@ -5,6 +5,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 
+import au.com.hellopeople.hotch.Activity.SellActivity;
+
 public class AlbumViewActivity extends AppCompatActivity {
 
     @Override

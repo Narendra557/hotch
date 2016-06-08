@@ -13,7 +13,7 @@ import android.widget.Toast;
 import au.com.hellopeople.hotch.ForgotPasswordActivity;
 import au.com.hellopeople.hotch.ProfileActivity;
 import au.com.hellopeople.hotch.R;
-import au.com.hellopeople.hotch.SellActivity;
+import au.com.hellopeople.hotch.Activity.SellActivity;
 import au.com.hellopeople.hotch.register.RegisterActivity;
 import au.com.hellopeople.hotch.register_offer_services.RegistertoOfferServicesActivity;
 
