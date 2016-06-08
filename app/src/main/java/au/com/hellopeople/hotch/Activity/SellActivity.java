@@ -4,7 +4,10 @@ import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.database.Cursor;
 import android.graphics.Color;
+import android.net.Uri;
+import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -13,12 +16,16 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpPost;
 //import org.apache.http.entity.mime.MultipartEntity;
 //import org.apache.http.entity.mime.content.FileBody;
 //import org.apache.http.entity.mime.content.StringBody;
+import org.apache.http.entity.mime.MultipartEntity;
+import org.apache.http.entity.mime.content.FileBody;
+import org.apache.http.entity.mime.content.StringBody;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.util.EntityUtils;
 
@@ -62,6 +69,13 @@ public class SellActivity extends AppCompatActivity implements CategoryCompleted
     private String upLoadServerUri = null;
     int i = 0;
     Date activityStartDate;
+    String imgPath1 = "NONE";
+    String imgPath2 = "NONE";
+    String imgPath3 = "NONE";
+    String imgPath4 = "NONE";
+    String imgPath5 = "NONE";
+    HttpEntity resEntity;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -390,10 +404,10 @@ public class SellActivity extends AppCompatActivity implements CategoryCompleted
                 videoNames = "{" + videoNames + "}";
             } else videoNames = "{}";
 
-            //        arrActivityVideoNames = getVideoNames(StaticData.arrActivityVideoNames);
-            //        arrActivityVideoPaths = StaticData.arrActivityVideoPaths;
-            //        imagesUploader();
-            videoUploader();
+//                    arrActivityVideoNames = getVideoNames(StaticData.arrActivityVideoNames);
+//                    arrActivityVideoPaths = StaticData.arrActivityVideoPaths;
+                    imagesUploader();
+//            videoUploader();
             new SellOrShareActivity(this).execute(String.valueOf(personId), String.valueOf(categoryId), activityName, keywords, durationType, String.valueOf(duration), String.valueOf(activityStartDate), String.valueOf(pickupOption), eventType, price, shortDesc, activityAddress, String.valueOf(pickedCurrent), "lat", "long", picNames, videoNames, String.valueOf(poId), String.valueOf(ccId), String.valueOf(pId));
         }
     }
@@ -442,16 +456,25 @@ public class SellActivity extends AppCompatActivity implements CategoryCompleted
         }).start();
     }
 
-//    public void imagesUploader(){
-////        dialog = ProgressDialog.show(SellActivity.this, "", "Uploading images...", true);
-//        new Thread(new Runnable() {
-//            public void run() {
-////                uploadingImages(arrActivityPicsPaths);
-//                    uploadFile(arrActivityPicsPaths[i]);
-//                uploadFile(arrActivityPicsPaths[i]);
-//            }
-//        }).start();
-//    }
+    public void imagesUploader(){
+        if(!(arrActivityPicsPaths[0].trim().equalsIgnoreCase("NONE"))){
+            dialog = ProgressDialog.show(SellActivity.this, "", "Uploading file...", true);
+            Thread thread=new Thread(new Runnable(){
+                public void run(){
+                    doImagesUpload();
+                    runOnUiThread(new Runnable(){
+                        public void run() {
+                            if(dialog.isShowing())
+                                dialog.dismiss();
+                        }
+                    });
+                }
+            });
+            thread.start();
+        }else{
+            Toast.makeText(getApplicationContext(),"Please select two files to upload.", Toast.LENGTH_SHORT).show();
+        }
+    }
 
     public int uploadFile(String serverUri, String sourceFileUri, String sourceFileName) {
 //        fileName = getImageName(sourceFileUri); // sourceFileUri;
@@ -566,160 +589,77 @@ public class SellActivity extends AppCompatActivity implements CategoryCompleted
         } // End else block
     }
 
-    private int uploadingImages(String[] mArrActivityPicsPaths){
-//        for (int i = 0; i < mArrActivityPicsPaths.length; i++) {
-//            if (mArrActivityPicsPaths[i] != null) {
-        HttpURLConnection conn = null;
-        DataOutputStream dos = null;
-        String lineEnd = "\r\n";
-        String twoHyphens = "--";
-        String boundary = "*****";
-        int bytesRead, bytesAvailable, bufferSize;
-        byte[] buffer;
-        int maxBufferSize = 1 * 1024 * 1024;
 
-        File sourceFile = new File(mArrActivityPicsPaths[i]);
 
-        if (!sourceFile.isFile()) {
-            dialog.dismiss();
-            Log.e("uploadFile", "Source File not exist :" + mArrActivityPicsPaths[i]);
-            runOnUiThread(new Runnable() {
-                public void run() {
-//                    messageText.setText("Source File not exist :"+ imagepath);
-                }
-            });
-            return 0;
-        } else {
-            try {
-                // open a URL connection to the Servlet
-                FileInputStream fileInputStream = new FileInputStream(sourceFile);
-                URL url = new URL(upLoadServerUri);
 
-                // Open a HTTP  connection to  the URL
-                conn = (HttpURLConnection) url.openConnection();
-                conn.setDoInput(true); // Allow Inputs
-                conn.setDoOutput(true); // Allow Outputs
-                conn.setUseCaches(false); // Don't use a Cached Copy
-                conn.setRequestMethod("POST");
-                conn.setRequestProperty("Connection", "Keep-Alive");
-                conn.setRequestProperty("ENCTYPE", "multipart/form-data");
-                conn.setRequestProperty("Content-Type", "multipart/form-data;boundary=" + boundary);
-                conn.setRequestProperty("uploaded_file", arrActivityPicsNames[i]);
 
-                dos = new DataOutputStream(conn.getOutputStream());
 
-                dos.writeBytes(twoHyphens + boundary + lineEnd);
-                dos.writeBytes("Content-Disposition: form-data; name=\"uploaded_file\";filename=\"" + arrActivityPicsNames[i] + "\"" + lineEnd);
 
-                dos.writeBytes(lineEnd);
 
-                // create a buffer of  maximum size
-                bytesAvailable = fileInputStream.available();
 
-                bufferSize = Math.min(bytesAvailable, maxBufferSize);
-                buffer = new byte[bufferSize];
 
-                // read file and write it into form...
-                bytesRead = fileInputStream.read(buffer, 0, bufferSize);
 
-                while (bytesRead > 0) {
-                    dos.write(buffer, 0, bufferSize);
-                    bytesAvailable = fileInputStream.available();
-                    bufferSize = Math.min(bytesAvailable, maxBufferSize);
-                    bytesRead = fileInputStream.read(buffer, 0, bufferSize);
-                }
 
-                // send multipart form data necesssary after file data...
-                dos.writeBytes(lineEnd);
-                dos.writeBytes(twoHyphens + boundary + twoHyphens + lineEnd);
 
-                // Responses from the server (code and message)
-                serverResponseCode = conn.getResponseCode();
-                String serverResponseMessage = conn.getResponseMessage();
-
-                Log.i("uploadFile", "HTTP Response is : " + serverResponseMessage + ": " + serverResponseCode);
-                if (serverResponseCode == 200) {
-                    runOnUiThread(new Runnable() {
-                        public void run() {
-//                            Toast.makeText(RegisterActivity.this, "File Upload Complete.", Toast.LENGTH_SHORT).show();
-                        }
-                    });
-                }
-
-                //close the streams //
-                fileInputStream.close();
-                dos.flush();
-                dos.close();
-            } catch (MalformedURLException ex) {
-                dialog.dismiss();
-                ex.printStackTrace();
-
-                runOnUiThread(new Runnable() {
-                    public void run() {
-//                        messageText.setText("MalformedURLException Exception : check script url.");
-                        Toast.makeText(SellActivity.this, "MalformedURLException", Toast.LENGTH_SHORT).show();
-                    }
-                });
-
-                Log.e("Upload file to server", "error: " + ex.getMessage(), ex);
-            } catch (Exception e) {
-                dialog.dismiss();
-                e.printStackTrace();
-
-                runOnUiThread(new Runnable() {
-                    public void run() {
-                        Toast.makeText(SellActivity.this, "Got Exception : see logcat ", Toast.LENGTH_SHORT).show();
-                    }
-                });
-                Log.e("Upload file to server", "Exception : " + e.getMessage(), e);
-            }
-//                return serverResponseCode;
-        } // End else block
-//            }
-//        }
-//        dialog.dismiss();
-        i++;
-//        if (i < 3)
-//        imagesUploader();
-        return serverResponseCode;
+    public String getPath(Uri uri) {
+        String[] projection = { MediaStore.Images.Media.DATA };
+        Cursor cursor = managedQuery(uri, projection, null, null, null);
+        int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+        cursor.moveToFirst();
+        return cursor.getString(column_index);
     }
 
-//    private void doFileUpload(){
-//
-//        File file1 = new File(selectedPath1);
-//        File file2 = new File(selectedPath2);
-//        String urlString = "http://10.0.2.2/upload_test/upload_media_test.php";
-//        try
-//        {
-//            HttpClient client = new DefaultHttpClient();
-//            HttpPost post = new HttpPost(urlString);
-//            FileBody bin1 = new FileBody(file1);
-//            FileBody bin2 = new FileBody(file2);
-//            MultipartEntity reqEntity = new MultipartEntity();
-//            reqEntity.addPart("uploadedfile1", bin1);
-//            reqEntity.addPart("uploadedfile2", bin2);
-//            reqEntity.addPart("user", new StringBody("User"));
-//            post.setEntity(reqEntity);
-//            HttpResponse response = client.execute(post);
-//            resEntity = response.getEntity();
-//            final String response_str = EntityUtils.toString(resEntity);
-//            if (resEntity != null) {
-//                Log.i("RESPONSE",response_str);
-//                runOnUiThread(new Runnable(){
-//                    public void run() {
-//                        try {
-//                            res.setTextColor(Color.GREEN);
-//                            res.setText("n Response from server : n " + response_str);
-//                            Toast.makeText(getApplicationContext(),"Upload Complete. Check the server uploads directory.", Toast.LENGTH_LONG).show();
-//                        } catch (Exception e) {
-//                            e.printStackTrace();
-//                        }
-//                    }
-//                });
-//            }
-//        }
-//        catch (Exception ex){
-//            Log.e("Debug", "error: " + ex.getMessage(), ex);
-//        }
-//    }
+    private void doImagesUpload(){
+        File file1 = new File(arrActivityPicsPaths[0]);
+        File file2 = file1;
+        File file3 = file1;
+        File file4 = file1;
+        File file5 = file1;
+        String urlString = "http://www.myhotch.com/app_control/activity_photos_uploader.php";
+        try
+        {
+            if (arrActivityPicsPaths[1] != null) file2 = new File(arrActivityPicsNames[1]);
+            if (arrActivityPicsPaths[2] != null) file3 = new File(arrActivityPicsNames[2]);
+            if (arrActivityPicsPaths[3] != null) file4 = new File(arrActivityPicsNames[3]);
+            if (arrActivityPicsPaths[4] != null) file5 = new File(arrActivityPicsNames[4]);
+
+
+            HttpClient client = new DefaultHttpClient();
+            HttpPost post = new HttpPost(urlString);
+            FileBody bin1 = new FileBody(file1), bin2 = new FileBody(file2), bin3 = new FileBody(file3), bin4 = new FileBody(file4), bin5 = new FileBody(file5);
+            if (arrActivityPicsPaths[1] != null) bin2 = new FileBody(file2);
+            if (arrActivityPicsPaths[2] != null) bin3 = new FileBody(file3);
+            if (arrActivityPicsPaths[3] != null) bin4 = new FileBody(file4);
+            if (arrActivityPicsPaths[4] != null) bin5 = new FileBody(file5);
+//              FileBody bin3 = new FileBody(file3);
+//            FileBody bin4 = new FileBody(file4);
+//            FileBody bin5 = new FileBody(file5);
+            MultipartEntity reqEntity = new MultipartEntity();
+            reqEntity.addPart("uploadedfile1", bin1);
+            if (arrActivityPicsPaths[1] != null)reqEntity.addPart("uploadedfile2", bin2);
+            if (arrActivityPicsPaths[2] != null)reqEntity.addPart("uploadedfile3", bin3);
+            if (arrActivityPicsPaths[3] != null)reqEntity.addPart("uploadedfile4", bin4);
+            if (arrActivityPicsPaths[4] != null)reqEntity.addPart("uploadedfile5", bin5);
+            reqEntity.addPart("user", new StringBody("User"));
+            post.setEntity(reqEntity);
+            HttpResponse response = client.execute(post);
+            resEntity = response.getEntity();
+            final String response_str = EntityUtils.toString(resEntity);
+            if (resEntity != null) {
+                Log.i("RESPONSE",response_str);
+                runOnUiThread(new Runnable(){
+                    public void run() {
+                        try {
+                            Toast.makeText(getApplicationContext(),"Upload Complete. Check the server uploads directory.", Toast.LENGTH_LONG).show();
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+                });
+            }
+        }
+        catch (Exception ex){
+            Log.e("Debug", "error: " + ex.getMessage(), ex);
+        }
+    }
 }
